@@ -4,11 +4,18 @@ import { BiSolidError } from "react-icons/bi";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+import { InfinitySpin } from 'react-loader-spinner';
+import { IoMdEye } from "react-icons/io";
+import { RiEyeCloseFill } from "react-icons/ri";
 
 
 const Registration = () => {
     const auth = getAuth();
+    let [loader,setloader] = useState(false)
+    let [showpassword,setshowpassword] =useState(false)
 
+    let navigate = useNavigate()
     let [inputdata,setinputdata]=useState({
         email:'',
         name:'',
@@ -38,6 +45,7 @@ const Registration = () => {
         }else if(inputdata.password.length < 6){
             seterrorinputdata({...errorinputdata, password:'password should be bigger than 6 character'})
         }else{
+            setloader(true)
             createUserWithEmailAndPassword(auth, inputdata.email, inputdata.password)
             .then(()=>{
                 toast.success('🐰 signup successful', {
@@ -45,6 +53,8 @@ const Registration = () => {
                     autoClose: 5000,
                     theme: "light",
                     });
+                    setloader(false)
+                    navigate('/login')
             })
             .catch((error) => {
                     toast.success('🐰 signup successful', {
@@ -76,15 +86,39 @@ const Registration = () => {
                 <h2 className='absolute z-10 bg-[#575757] border-[0.25px] text-white rounded-md flex p-1'> <div className='relative'><FaCaretRight className=' left-6 top-[-25px] text-[#575757] text-[40px] rotate-[-90deg] absolute'/></div><BiSolidError className= 'text-[18px] text-[#ffa54c] mt-1 mr-1'  />{errorinputdata.name} </h2>
                 }
                 <p className='text-sml text-white'>Password</p>
-                <input onChange={handlechange}   name='password' type="password"  className='w-[262px] mt-2 mb-2 rounded h-8 text-white pl-3	bg-dark focus:outline-none focus:ring-0 focus:border-blue-500	border-[1px] border-[#8a8a8a]		'/>
+                <div className='relative'> 
+                <input onChange={handlechange}   name='password'  type={!showpassword && "password"}  className='w-[262px] mt-2 mb-2 rounded h-8 text-white pl-3 bg-dark focus:outline-none focus:ring-0 focus:border-blue-500	border-[1px] border-[#8a8a8a] ]'/>
+                {showpassword ?
+                <IoMdEye onClick={()=>setshowpassword(!showpassword)} className='absolute top-4 right-5  text-white' />
+                :
+                <RiEyeCloseFill onClick={()=>setshowpassword(!showpassword)}  className='absolute top-4 right-5  text-white' />
+                }
 
+                </div>
                 {errorinputdata.password &&
                 <h2 className='absolute z-10 bg-[#575757] border-[0.25px] text-white rounded-md flex p-1'> <div className='relative'><FaCaretRight className=' left-6 top-[-25px] text-[#575757] text-[40px] rotate-[-90deg] absolute'/></div><BiSolidError className= 'text-[18px] text-[#ffa54c] mt-1 mr-1'  />{errorinputdata.password} </h2>
                 }
-                <div className='text-center'><button onClick={handleclick} className='bg-green-600 mt-6 pt-1 pb-1 text-white w-full rounded-md '>Sign up</button></div>
+                <div className='text-center'>
+                { loader ?
+                   ( <div className='w-[84%] flex justify-center' >
+                        <div>
+                        <InfinitySpin 
+                            visible={true}
+                            width="100"
+                            color="#4fa94d"
+                            aline="center"
+                            ariaLabel="infinity-spin-loading"
+                            />
+                        </div>
+                    </div>)
+                    :
+                    <button onClick={handleclick} className='bg-green-600 mt-6 pt-1 pb-1 text-white w-full rounded-md  items-center'>Sing Up</button>
+                }
+
+                </div>
             </div>
             <div className='bg-[#30363d25] border-[.20px] border-[#ffffff22] overflow-hidden pt-5 pb-4 pr-4 pl-4 rounded-md mt-6'>
-                <p className='text-white text-sml'>Have an accunt ? <a href="#" className='text-blue-500'>Login</a></p>
+                <p className='text-white text-sml'>Have an accunt ? <a onClick={()=>{navigate('/Login'),console.log("ok")}} href="#" className='text-blue-500'>Login</a></p>
             </div>
         </div>
         <ToastContainer/>

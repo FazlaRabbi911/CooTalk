@@ -6,6 +6,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Registration from './pages/Registration';
+import Login from './pages/Login';
 
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
     createRoutesFromElements(
       <Route>
         <Route path="/" element={<Registration/>} />
-       
+        <Route path='/Login' element={<Login/>}></Route>
       </Route>
 
     )
