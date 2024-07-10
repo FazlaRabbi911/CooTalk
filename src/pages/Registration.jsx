@@ -93,7 +93,6 @@ const Registration = () => {
                 :
                 <RiEyeCloseFill onClick={()=>setshowpassword(!showpassword)}  className='absolute top-4 right-5  text-white' />
                 }
-
                 </div>
                 {errorinputdata.password &&
                 <h2 className='absolute z-10 bg-[#575757] border-[0.25px] text-white rounded-md flex p-1'> <div className='relative'><FaCaretRight className=' left-6 top-[-25px] text-[#575757] text-[40px] rotate-[-90deg] absolute'/></div><BiSolidError className= 'text-[18px] text-[#ffa54c] mt-1 mr-1'  />{errorinputdata.password} </h2>
