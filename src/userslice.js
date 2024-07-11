@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { joinPaths, json } from '@remix-run/router'
 
-export const counterSlice = createSlice({
-  name: 'counter',
+export const userslice = createSlice({
+  name: 'user',
   initialState: {
-    value: 0,
+    value: localStorage.getItem("activeUserdata") ? JSON.parse(localStorage.getItem("activeUserdata") )
+    :null,
   },
   reducers: {
     activeuser:(state,action)=>{
@@ -13,6 +15,6 @@ export const counterSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { activeuser  } = counterSlice.actions
+export const { activeuser  } = userslice.actions
 
-export default counterSlice.reducer
+export default userslice.reducer

@@ -1,21 +1,19 @@
 import React, { useState } from 'react'
 import { FaCaretRight } from "react-icons/fa";
 import { BiSolidError } from "react-icons/bi";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,updateProfile } from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { InfinitySpin } from 'react-loader-spinner';
 import { IoMdEye } from "react-icons/io";
 import { RiEyeCloseFill } from "react-icons/ri";
-import {  updateProfile } from "firebase/auth";
-import { getDatabase,push,ref, set } from "firebase/database";
+import { getDatabase,ref, set } from "firebase/database";
 
 
 const Registration = () => {
     const auth = getAuth();
     const db = getDatabase();
-
     let [loader,setloader] = useState(false)
     let [showpassword,setshowpassword] =useState(false)
 
@@ -52,26 +50,30 @@ const Registration = () => {
             setloader(true)
             createUserWithEmailAndPassword(auth, inputdata.email, inputdata.password)
             .then(()=>{
+
                 updateProfile(auth.currentUser, {
-                    displayName:  inputdata.name, photoURL: "https://firebasestorage.googleapis.com/v0/b/cootalk-e6218.appspot.com/o/Avatar%2Fprofile.png?alt=media&token=64426eeb-04d5-430c-8377-dcc0a7aed9e9"
-                  }).then(() => {
-                    set((ref(db, 'users/'+userCredential.user.uid )), {
+                    displayName:inputdata.name ,
+                    photoURL: "https://firebasestorage.googleapis.com/v0/b/cootalk-e6218.appspot.com/o/Avatar%2Fprofile.png?alt=media&token=64426eeb-04d5-430c-8377-dcc0a7aed9e9"
+                  }).then((userInfo) => {
+                    setloader(false)
+                    navigate('/login')
+                    set(ref(db, 'users/' + userInfo.user.uid), {
                         username: inputdata.name,
                         email: inputdata.email,
-                        profile_picture : photoURL
-                      }).then(()=>{
-                        setloader(false)
-                        navigate('/login')
-                        toast.success('🐰 signup successful', {
-                            position: "bottom-center",
-                            autoClose: 5000,
-                            theme: "light",
-                            });
-                      })
+                        profile_picture : userInfo.user.photoURL
+                      });
+                      console.log(userInfo.user.photoURL)
+                    toast.success('🐰 signup successful', {
+                        position: "bottom-center",
+                        autoClose: 5000,
+                        theme: "light",
+                        });
                   }).catch((error) => {
                     // An error occurred
                     // ...
-                  }); 
+                  });
+
+
 
             }).catch((error) => {
                     toast.error('Email already in use', {

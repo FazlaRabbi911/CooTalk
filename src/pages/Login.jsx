@@ -8,9 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import { InfinitySpin } from 'react-loader-spinner';
 import { IoMdEye } from "react-icons/io";
 import { RiEyeCloseFill } from "react-icons/ri";
+import { useDispatch } from 'react-redux';
+import { activeuser } from '../userslice';
 
 const Login = () => {
     const auth = getAuth();
+    let dispatch = useDispatch()
     let [loader,setloader] = useState(false)
     let [showpassword,setshowpassword] =useState(false)
     let navigate = useNavigate()
@@ -41,12 +44,16 @@ const Login = () => {
         }else{setloader(true)
             signInWithEmailAndPassword(auth, inputdata.email, inputdata.password)
             .then((userCredential) => {
+
                 toast.success('🐰 Sign in successful', {
                     position: "bottom-center",
                     autoClose: 5000,
                     theme: "light",
                     });
                     setloader(false)
+                    localStorage.setItem("activeUserdata",JSON.stringify(userCredential.user))
+                    dispatch(activeuser(userCredential.user))
+                    navigate('/home')
             })
             .catch((error) => {
                 toast.error('Error!! Invalid credential', {
