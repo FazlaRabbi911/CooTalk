@@ -44,7 +44,6 @@ const Login = () => {
         }else{setloader(true)
             signInWithEmailAndPassword(auth, inputdata.email, inputdata.password)
             .then((userCredential) => {
-
                 toast.success('🐰 Sign in successful', {
                     position: "bottom-center",
                     autoClose: 5000,
@@ -53,7 +52,7 @@ const Login = () => {
                     setloader(false)
                     localStorage.setItem("activeUserdata",JSON.stringify(userCredential.user))
                     dispatch(activeuser(userCredential.user))
-                    navigate('/home')
+                    navigate('/home/feed')
             })
             .catch((error) => {
                 toast.error('Error!! Invalid credential', {

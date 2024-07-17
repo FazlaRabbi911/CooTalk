@@ -6,7 +6,7 @@ import { IoIosSettings } from "react-icons/io";
 import { IoMdLogOut } from "react-icons/io";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaFileImage } from "react-icons/fa";
 import { getDownloadURL, getStorage,ref,  uploadString } from "firebase/storage";
 import { getAuth,  updateProfile } from "firebase/auth";
@@ -20,6 +20,9 @@ const defaultSrc =
   "https://firebasestorage.googleapis.com/v0/b/cootalk-e6218.appspot.com/o/Avatar%2Fprofile.png?alt=media&token=64426eeb-04d5-430c-8377-dcc0a7aed9e9";
 // croper
 const Navbar = () => {
+  // nav page location react-router
+  let location = useLocation()
+  // nav page location react-router
   const auth = getAuth();
   // croper
   const storage = getStorage();
@@ -32,6 +35,7 @@ const Navbar = () => {
 
   let dispatch = useDispatch()
   let activeUserInfo = useSelector((state)=>state.storeuser.value)
+  
   let navigate = useNavigate()
   // croper
   const handelimgupload = (e) => {
@@ -85,11 +89,12 @@ console.log(activeuser.photoURL)
         <img className='rounded-full w-100% cursor-pointer'  src={activeUserInfo.photoURL} alt="" />
         <h2 className='mt-4 text-center'>{activeUserInfo.displayName}</h2>
         </div>
-       <div className='bg-[#404042] rounded-3xl hover:p-1	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><SiHomeadvisor className='text-[64px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/> <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-100px] top-4 '></div> </div>
-       <div className='bg-[#404042] rounded-3xl p-2 hover:p-3 	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><FaEnvelopeOpenText className='text-[44px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-100px] top-4 '></div> </div>
-       <div  className='bg-[#404042] rounded-3xl hover:p-1	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><IoIosNotifications className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-100px] top-4 '></div> </div>
-       <div className='bg-[#404042] rounded-3xl hover:p-1	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><IoIosSettings className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-100px] top-4 '></div> </div>
-       <div  className='bg-[#050506] rounded-3xl hover:p-1	 hover:bg-[#060607]  hover:border-[#2e2e8f] ansition-all delay-100 ease-in-out	 duration-300 group'><IoMdLogOut onClick={()=>handleLogOut()} className='text-[64px] text-red-400 group-hover:text-red-500 boder-1 '/></div>
+        <div><Link className={location.pathname =="/home/feed" && "active"} to='/home/feed'><div className='bg-[#404042] rounded-3xl active:p-1	relative active:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><SiHomeadvisor className='text-[64px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/> <div className='absolute bg-white active:h-10 duration-300 h-2 rounded-xl w-2 left-[-50px] top-4 '></div> </div></Link></div>
+        <div><Link className={location.pathname =="/home/massage" && "active"} to='/home/massage' ><div className='bg-[#404042] rounded-3xl p-2 hover:p-3 	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><FaEnvelopeOpenText className='text-[44px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-50px] top-4 '></div> </div>        </Link></div>
+        <div><Link className={location.pathname =="/home/notification" && "active"} to='/home/notification'><div  className='bg-[#404042] rounded-3xl hover:p-1	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><IoIosNotifications className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-50px] top-4 '></div> </div>        </Link></div>
+        <div><Link className={location.pathname =="/home/setting" && "active"} to='/home/setting'><div className='bg-[#404042] rounded-3xl hover:p-1	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><IoIosSettings className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-50px] top-4 '></div> </div>        </Link></div>
+        <div><Link ><div  className='bg-[#050506] rounded-3xl hover:p-1	 hover:bg-[#060607]  hover:border-[#2e2e8f] ansition-all delay-100 ease-in-out	 duration-300 group'><IoMdLogOut onClick={()=>handleLogOut()} className='text-[64px] text-red-400 group-hover:text-red-500 boder-1 '/></div>
+        </Link></div>
        {showModal ? (
         <>
           <div
