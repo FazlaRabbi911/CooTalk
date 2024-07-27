@@ -64,7 +64,6 @@ const Navbar = () => {
           updateProfile(auth.currentUser, {
           photoURL: downloadURL,
           }).then(() => {
-           console.log(downloadURL)
            localStorage.setItem("activeUserdata",JSON.stringify({...activeuser,photoURL:downloadURL}))
            dispatch(activeuser({...activeuser,photoURL:downloadURL}))
           })
@@ -75,24 +74,30 @@ const Navbar = () => {
 
 
 
-console.log(activeuser.photoURL)
-
   let handleLogOut=()=>{
     localStorage.removeItem("activeUserdata")
     navigate('/login')
   }
   const [showModal, setShowModal] = React.useState(false);
 
+  let [activeLinkdata,setactiveLinkdata] = useState(false)
+  // console.log(activeLinkdata == true ? "true" :"false")
+    let activeLINK = ""
+    let notactiveLINK = "bg-[#404042] rounded-3xl relative  transition-all delay-100 ease-in-out	 duration-300  "
+
+console.log(activeLINK)
+
+{/* <IoIosSettings className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  */}
   return (
     <div className='flex flex-col items-end	pr-8	bg-[#05061c] text-white h-screen gap-[7%] '>
        <div className='	w-[70%] mt-3 ' onClick={() => setShowModal(true)}>
         <img className='rounded-full w-100% cursor-pointer'  src={activeUserInfo.photoURL} alt="" />
         <h2 className='mt-4 text-center'>{activeUserInfo.displayName}</h2>
         </div>
-        <div><Link className={location.pathname =="/home/feed" && "active"} to='/home/feed'><div className='bg-[#404042] rounded-3xl active:p-1	relative active:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><SiHomeadvisor className='text-[64px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/> <div className='absolute bg-white active:h-10 duration-300 h-2 rounded-xl w-2 left-[-50px] top-4 '></div> </div></Link></div>
-        <div><Link className={location.pathname =="/home/massage" && "active"} to='/home/massage' ><div className='bg-[#404042] rounded-3xl p-2 hover:p-3 	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><FaEnvelopeOpenText className='text-[44px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-50px] top-4 '></div> </div>        </Link></div>
-        <div><Link className={location.pathname =="/home/notification" && "active"} to='/home/notification'><div  className='bg-[#404042] rounded-3xl hover:p-1	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><IoIosNotifications className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-50px] top-4 '></div> </div>        </Link></div>
-        <div><Link className={location.pathname =="/home/setting" && "active"} to='/home/setting'><div className='bg-[#404042] rounded-3xl hover:p-1	relative hover:bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group'><IoIosSettings className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  <div className='absolute bg-white group-hover:h-10 duration-300 h-2 rounded-xl w-2 left-[-50px] top-4 '></div> </div>        </Link></div>
+        <div><Link  to='/home/feed' ><div className={`${ location.pathname =="/home/feed" ? 'rounded-3xl p-2 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-1	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><SiHomeadvisor className='text-[60px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>   <div className={`${ location.pathname == "/home/feed" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px] top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
+        <div><Link className={location.pathname =="/home/massage" && "active"} to='/home/massage' ><div className={`${ location.pathname =="/home/massage" ? 'rounded-3xl p-3 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-2	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><FaEnvelopeOpenText className='text-[44px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>    <div className={`${ location.pathname == "/home/massage" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px] top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
+        <div><Link className={location.pathname =="/home/notification" && "active"} to='/home/notification' ><div className={`${ location.pathname =="/home/notification" ? 'rounded-3xl p-2 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-1	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><IoIosNotifications className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>    <div className={`${ location.pathname == "/home/notification" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px] top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
+        <div><Link className={location.pathname =="/home/setting" && "active"} to='/home/setting' ><div className={`${ location.pathname =="/home/setting" ? 'rounded-3xl p-2 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-1	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><IoIosSettings className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>     <div className={`${ location.pathname == "/home/setting" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px] top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
         <div><Link ><div  className='bg-[#050506] rounded-3xl hover:p-1	 hover:bg-[#060607]  hover:border-[#2e2e8f] ansition-all delay-100 ease-in-out	 duration-300 group'><IoMdLogOut onClick={()=>handleLogOut()} className='text-[64px] text-red-400 group-hover:text-red-500 boder-1 '/></div>
         </Link></div>
        {showModal ? (
