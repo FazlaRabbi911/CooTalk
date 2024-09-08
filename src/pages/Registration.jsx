@@ -50,7 +50,6 @@ const Registration = () => {
             setloader(true)
             createUserWithEmailAndPassword(auth, inputdata.email, inputdata.password)
             .then(()=>{
-
                 updateProfile(auth.currentUser, {
                     displayName:inputdata.name ,
                     photoURL: "https://firebasestorage.googleapis.com/v0/b/cootalk-e6218.appspot.com/o/Avatar%2Fprofile.png?alt=media&token=64426eeb-04d5-430c-8377-dcc0a7aed9e9"
@@ -100,7 +99,7 @@ const Registration = () => {
                 <h2 className='absolute z-10 bg-[#575757] border-[0.25px] text-white rounded-md flex p-1'> <div className='relative'><FaCaretRight className=' left-6 top-[-25px] text-[#575757] text-[40px] rotate-[-90deg] absolute'/></div><BiSolidError className= 'text-[18px] text-[#ffa54c] mt-1 mr-1'  />{errorinputdata.email} </h2>
                 }
                 <p className='text-sml text-white'>Username</p>
-                <input onChange={handlechange}  name='name' className='w-[262px]  mt-2 mb-4 rounded h-8 text-white pl-3	bg-dark focus:outline-none focus:ring-0 focus:border-blue-500	border-[1px] border-[#8a8a8a]		' type="text"/>
+                <input onChange={handlechange}  name='name' className='w-[262px]  mt-2 mb-4 rounded h-8 text-white pl-3	bg-dark focus:outline-none focus:ring-0 focus:border-blue-500	border-[1px] border-[#8a8a8a]' type="text"/>
 
                 {errorinputdata.name &&
                 <h2 className='absolute z-10 bg-[#575757] border-[0.25px] text-white rounded-md flex p-1'> <div className='relative'><FaCaretRight className=' left-6 top-[-25px] text-[#575757] text-[40px] rotate-[-90deg] absolute'/></div><BiSolidError className= 'text-[18px] text-[#ffa54c] mt-1 mr-1'  />{errorinputdata.name} </h2>
