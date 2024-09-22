@@ -38,6 +38,9 @@ const Navbar = () => {
   
   let navigate = useNavigate()
   // croper
+
+
+
   const handelimgupload = (e) => {
     e.preventDefault();
     let files;
@@ -53,6 +56,19 @@ const Navbar = () => {
     };
   };
 
+  // let [userInfo,setuserinfo]=useState({})
+  useEffect(()=>{
+    const userData = ref(db, 'users' );
+    onValue(userData, (snapshot) => {
+        let arry =[]
+        snapshot.forEach((item)=>{
+            // snapshot give object data by using forEach we can iterate every key value 
+            arry.push({serverUID:item.key})
+        })
+        // setuserinfo(arry)
+        });
+},[])
+// console.log(userInfo)
   const getCropData = () => {
     setShowModal(false)
       // setCropData=(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
@@ -85,7 +101,7 @@ const Navbar = () => {
     let activeLINK = ""
     let notactiveLINK = "bg-[#404042] rounded-3xl relative  transition-all delay-100 ease-in-out	 duration-300  "
 
-console.log(activeLINK)
+// console.log(activeLINK)
 
 {/* <IoIosSettings className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  */}
   return (

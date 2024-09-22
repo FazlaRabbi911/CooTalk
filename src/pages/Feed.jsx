@@ -1,5 +1,6 @@
 import React from 'react'
 import CreatGroup from '../components/CreatGroup'
+import FriendRequest from '../components/FriendRequest'
 
 const Feed = () => {
   return (
@@ -13,7 +14,9 @@ const Feed = () => {
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
 
     </div>
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
+      <FriendRequest/>
+    </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>

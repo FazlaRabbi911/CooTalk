@@ -49,18 +49,22 @@ const Registration = () => {
         }else{
             setloader(true)
             createUserWithEmailAndPassword(auth, inputdata.email, inputdata.password)
-            .then(()=>{
+            .then((userInfo)=>{
                 updateProfile(auth.currentUser, {
                     displayName:inputdata.name ,
                     photoURL: "https://firebasestorage.googleapis.com/v0/b/cootalk-e6218.appspot.com/o/Avatar%2Fprofile.png?alt=media&token=64426eeb-04d5-430c-8377-dcc0a7aed9e9"
-                  }).then((userInfo) => {
+                  }).then(() => {
+                    console.log(userInfo)
                     setloader(false)
-                    navigate('/login')
+
+
                     set(ref(db, 'users/' + userInfo.user.uid), {
                         username: inputdata.name,
                         email: inputdata.email,
                         profile_picture : userInfo.user.photoURL
-                      });
+                      }).then(()=>{
+                        navigate('/login')
+                      })
                       console.log(userInfo.user.photoURL)
                     toast.success('🐰 signup successful', {
                         position: "bottom-center",
@@ -70,6 +74,7 @@ const Registration = () => {
                   }).catch((error) => {
                     // An error occurred
                     // ...
+                    console.log(error)
                   });
 
 
@@ -136,7 +141,7 @@ const Registration = () => {
                 </div>
             </div>
             <div className='bg-[#30363d25] border-[.20px] border-[#ffffff22] overflow-hidden pt-5 pb-4 pr-4 pl-4 rounded-md mt-6'>
-                <p className='text-white text-sml'>Have an accunt ? <a onClick={()=>{navigate('/Login'),console.log("ok")}} href="#" className='text-blue-500'>Login</a></p>
+                <p className='text-white text-sml'>Have an accunt ? <a onClick={()=>{navigate('/Login')}} href="#" className='text-blue-500'>Login</a></p>
             </div>
         </div>
         <ToastContainer/>
