@@ -8,16 +8,15 @@ import { IoMdLogOut } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaFileImage } from "react-icons/fa";
-import { getDownloadURL, getStorage,ref,  uploadString } from "firebase/storage";
+import { getDownloadURL, getStorage,ref as storageREF,  uploadString } from "firebase/storage";
 import { getAuth,  updateProfile } from "firebase/auth";
 // croper
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { getDatabase, update } from 'firebase/database';
+import { getDatabase, set ,ref } from 'firebase/database';
 import {activeuser} from '../userslice'
 
-const defaultSrc =
-  "https://firebasestorage.googleapis.com/v0/b/cootalk-e6218.appspot.com/o/Avatar%2Fprofile.png?alt=media&token=64426eeb-04d5-430c-8377-dcc0a7aed9e9";
+
 // croper
 const Navbar = () => {
   // nav page location react-router
@@ -27,7 +26,7 @@ const Navbar = () => {
   // croper
   const storage = getStorage();
     // croper
-    const [image, setImage] = useState(defaultSrc);
+    const [image, setImage] = useState();
     const [cropData, setCropData] = useState("#");
     const cropperRef = createRef();
     // croper
@@ -35,7 +34,7 @@ const Navbar = () => {
 
   let dispatch = useDispatch()
   let activeUserInfo = useSelector((state)=>state.storeuser.value)
-  
+  console.log(activeUserInfo)
   let navigate = useNavigate()
   // croper
 
@@ -60,30 +59,23 @@ const Navbar = () => {
   const getCropData = () => {
     setShowModal(false)
       // setCropData=(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
-      const storageRef = ref(storage, `profile-${activeUserInfo.uid}`);
+      const storageRef = storageREF (storage, `profile-${activeUserInfo.uid}`);
       const message4 = (cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
       uploadString(storageRef, message4, 'data_url').then((snapshot) => {
-
         getDownloadURL(storageRef).then((downloadURL) => {
           updateProfile(auth.currentUser, {
           photoURL: downloadURL,
-          }).then((downloadURL) => {
-            update(db, 'users/' + activeUserInfo.user.uid, {
-              profilePicture: downloadURL
+          }).then(() => {
+           localStorage.setItem("activeUserdata",JSON.stringify({...activeUserInfo,photoURL:downloadURL}))
+           dispatch(activeuser({...activeUserInfo,photoURL:downloadURL}))
+          }).then(()=>{
+            set(ref(db, 'users/' + activeUserInfo.uid), {
+              username: activeUserInfo.displayName,
+              profile_picture : downloadURL,
+              email: activeUserInfo.email
             })
-           localStorage.setItem("activeUserdata",JSON.stringify({...activeuser,photoURL:downloadURL}))
-           dispatch(activeuser({...activeuser,photoURL:downloadURL}))
-
-           .then((downloadURL)=>{
-            // update(db, 'users/' + activeUserInfo.user.uid, {
-            //   profilePicture: downloadURL
-            // })
-            console.log(downloadURL)
-           })
-
           })
         });
-
       });
   };
 
@@ -105,11 +97,15 @@ const Navbar = () => {
 {/* <IoIosSettings className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>  */}
   return (
     <div className='flex flex-col items-end	pr-8	bg-[#05061c] text-white h-screen gap-[7%] '>
-       <div className='	w-[70%] mt-3 ' onClick={() => setShowModal(true)}>
-        <img className='rounded-full w-100% cursor-pointer'  src={activeUserInfo.photoURL} alt="" />
-        <h2 className='mt-4 text-center'>{activeUserInfo.displayName}</h2>
+       <div className='	w-[80%]  mt-3 ' onClick={() => setShowModal(true)}>
+        <div className=' flex justify-end align-items-center'>
+          <div className='w-[80%] justify-center mr-3'>
+            <img className='rounded-full w-100% cursor-pointer '  src={activeUserInfo.photoURL} alt="" />
+          </div>
         </div>
-        <div><Link to='/home/feed' ><div className={`${ location.pathname =="/home/feed" ? 'rounded-3xl p-2 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-1	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><SiHomeadvisor className='text-[60px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>   <div className={`${ location.pathname == "/home/feed" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px]  top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
+        <h2 className='mt-4 text-center text-2xl font-mono text-[#c3c8ff] '>{activeUserInfo.displayName}</h2>
+        </div>
+        <div><Link to='/home/feed' ><div className={`${ location.pathname =="/home/feed" ? 'rounded-3xl p-2 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-1	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><SiHomeadvisor className='text-[60px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/> <div className={`${ location.pathname == "/home/feed" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px]  top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
         <div><Link className={location.pathname =="/home/massage" && "active"} to='/home/massage' ><div className={`${ location.pathname =="/home/massage" ? 'rounded-3xl p-3 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-2	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><FaEnvelopeOpenText className='text-[44px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>    <div className={`${ location.pathname == "/home/massage" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px] top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
         <div><Link className={location.pathname =="/home/notification" && "active"} to='/home/notification' ><div className={`${ location.pathname =="/home/notification" ? 'rounded-3xl p-2 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-1	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><IoIosNotifications className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>    <div className={`${ location.pathname == "/home/notification" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px] top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
         <div><Link className={location.pathname =="/home/setting" && "active"} to='/home/setting' ><div className={`${ location.pathname =="/home/setting" ? 'rounded-3xl p-2 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-1	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><IoIosSettings className='text-[54px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>     <div className={`${ location.pathname == "/home/setting" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px] top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>

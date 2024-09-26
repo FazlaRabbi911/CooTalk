@@ -1,6 +1,6 @@
 import React from 'react'
 import CreatGroup from '../components/CreatGroup'
-import FriendRequest from '../components/FriendRequest'
+import UserList from '../components/UserList'
 
 const Feed = () => {
   return (
@@ -12,10 +12,10 @@ const Feed = () => {
       <CreatGroup/>
     </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
-
+    
     </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
-      <FriendRequest/>
+    <UserList/>
     </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>

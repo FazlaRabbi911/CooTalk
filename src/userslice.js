@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { joinPaths, json } from '@remix-run/router'
 
 export const userslice = createSlice({
   name: 'user',
