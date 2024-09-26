@@ -56,8 +56,6 @@ const Registration = () => {
                   }).then(() => {
                     console.log(userInfo)
                     setloader(false)
-
-
                     set(ref(db, 'users/' + userInfo.user.uid), {
                         username: inputdata.name,
                         email: inputdata.email,

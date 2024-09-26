@@ -15,8 +15,6 @@ const CreatGroup = () => {
           <div  className=' w-[20%]'><button className=' p-2 rounded-lg font-bold text-[16px] transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 border-[1px] border-[#f1f1f160]'>Click</button></div>
         </div>
       </div>
-
-      
     </div>
   )
 }

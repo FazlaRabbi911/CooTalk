@@ -13,7 +13,7 @@ import { getAuth,  updateProfile } from "firebase/auth";
 // croper
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { getDatabase } from 'firebase/database';
+import { getDatabase, update } from 'firebase/database';
 import {activeuser} from '../userslice'
 
 const defaultSrc =
@@ -56,32 +56,31 @@ const Navbar = () => {
     };
   };
 
-  // let [userInfo,setuserinfo]=useState({})
-  useEffect(()=>{
-    const userData = ref(db, 'users' );
-    onValue(userData, (snapshot) => {
-        let arry =[]
-        snapshot.forEach((item)=>{
-            // snapshot give object data by using forEach we can iterate every key value 
-            arry.push({serverUID:item.key})
-        })
-        // setuserinfo(arry)
-        });
-},[])
 // console.log(userInfo)
   const getCropData = () => {
     setShowModal(false)
       // setCropData=(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
-
       const storageRef = ref(storage, `profile-${activeUserInfo.uid}`);
       const message4 = (cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
       uploadString(storageRef, message4, 'data_url').then((snapshot) => {
+
         getDownloadURL(storageRef).then((downloadURL) => {
           updateProfile(auth.currentUser, {
           photoURL: downloadURL,
-          }).then(() => {
+          }).then((downloadURL) => {
+            update(db, 'users/' + activeUserInfo.user.uid, {
+              profilePicture: downloadURL
+            })
            localStorage.setItem("activeUserdata",JSON.stringify({...activeuser,photoURL:downloadURL}))
            dispatch(activeuser({...activeuser,photoURL:downloadURL}))
+
+           .then((downloadURL)=>{
+            // update(db, 'users/' + activeUserInfo.user.uid, {
+            //   profilePicture: downloadURL
+            // })
+            console.log(downloadURL)
+           })
+
           })
         });
 
