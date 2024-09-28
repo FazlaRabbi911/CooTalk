@@ -1,6 +1,8 @@
 import React from 'react'
 import CreatGroup from '../components/CreatGroup'
 import UserList from '../components/UserList'
+import FriendReaquest from '../components/FriendReaquest'
+import Friends from '../components/Friends'
 
 const Feed = () => {
   return (
@@ -12,12 +14,14 @@ const Feed = () => {
       <CreatGroup/>
     </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
-    
+    <Friends/>
     </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
     <UserList/>
     </div>
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
+      <FriendReaquest/>
+    </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
   </div>
