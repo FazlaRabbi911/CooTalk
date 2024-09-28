@@ -34,7 +34,6 @@ const Navbar = () => {
 
   let dispatch = useDispatch()
   let activeUserInfo = useSelector((state)=>state.storeuser.value)
-  console.log(activeUserInfo)
   let navigate = useNavigate()
   // croper
 

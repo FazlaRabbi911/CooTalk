@@ -3,6 +3,7 @@ import CreatGroup from '../components/CreatGroup'
 import UserList from '../components/UserList'
 import FriendReaquest from '../components/FriendReaquest'
 import Friends from '../components/Friends'
+import Blocklist from '../components/Blocklist'
 
 const Feed = () => {
   return (
@@ -23,7 +24,9 @@ const Feed = () => {
       <FriendReaquest/>
     </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
+      <Blocklist/>
+    </div>
   </div>
     
   )

@@ -20,15 +20,11 @@ const FriendReaquest = () => {
           arry.push({
             ...item.val(),id:item.key
           })
-          console.log("yes")
         }
-        console.log(item.val().Receiver_Uid)
-        console.log(activeUserInfo.uid)
         })
         setRequest(arry)
       });
   },[])
-  // console.log(activeUserInfo.uid)
   let handeleDelete =(item)=>{
     remove(ref(db,'FriendRequest/'+item.id))
   }

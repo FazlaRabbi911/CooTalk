@@ -15,7 +15,7 @@ const Home = () => {
   },[])
   return (
     <div className='flex bg-dark h-screen'>
-      <div className=' w-[11%] overflow-hidden'>
+      <div className=' w-[15%] overflow-hidden'>
         <Navbar/>
       </div>
       <div className='  w-[85%] overflow-hidden' >
