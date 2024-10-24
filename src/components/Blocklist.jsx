@@ -18,9 +18,10 @@ const Blocklist = () => {
         onValue(starCountRef, (snapshot) => {
             let arry = []
             snapshot.forEach((item)=>{
-                if(activeUserInfo.uid == item.val().block_By_Id || activeUserInfo.uid == item.val().blocked_Id){
+                if(activeUserInfo.uid == item.val().block_By_Id || item.val().blocked_Id == activeUserInfo.uid ){
                     arry.push({...item.val(),BlockDBkey:item.key})
                   }
+                  console.log(item.val())
             })
             setBlockData(arry)
         });
@@ -40,8 +41,6 @@ const Blocklist = () => {
                 :
                 <img className="rounded-[20px] h-[100%] ml-2" src={item.block_By_profile}/>
                 }
-
-                
                 </div>
               <div className=' w-[60%] text-left pl-8 '>
               {item.block_By_Id == activeUserInfo.uid

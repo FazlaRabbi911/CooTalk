@@ -29,18 +29,34 @@ const Friends = () => {
     }
 
     let handleBlock =(item)=>{
-      set(push(ref(db, 'block_users/')), {
-        block_By_Name: activeUserInfo.displayName,
-        block_By_Id: activeUserInfo.uid,
-        block_By_profile: activeUserInfo.photoURL,
+        if(activeUserInfo.uid == item.who_SendRequest_Uid){
+          set(push(ref(db, 'block_users/')), {
+            block_By_Name: activeUserInfo.displayName,
+            block_By_Id: activeUserInfo.uid,
+            block_By_profile: activeUserInfo.photoURL,
+    
+            blocked_Name: item.Receiver_Name,
+            blocked_Id: item.Receiver_Uid,
+            blocked_profile: item.Receiver_profile     
+          }).then(()=>{
+            remove(ref(db,"friend/" + item.FrndDBkey))
+          });
+        }else{
+          set(push(ref(db, 'block_users/')), {
+            block_By_Name: activeUserInfo.displayName,
+            block_By_Id: activeUserInfo.uid,
+            block_By_profile: activeUserInfo.photoURL,           
+    
 
-        who_SendRequest_Name: item.who_SendRequest_Name,
-        blocked_Id: item.who_SendRequest_Uid,
-        blocked_profile: item.who_SendRequest_profile,
-      }).then(()=>{
-        remove(ref(db, 'friend/' + item.FrndDBkey))
-      })
-      console.log("yes")
+            blocked_Name: item.who_SendRequest_Name,
+            blocked_Id: item.who_SendRequest_Uid,
+            blocked_profile: item.who_SendRequest_profile,
+          }).then(()=>{
+            remove(ref(db,"friend/" + item.FrndDBkey))
+          });
+        }
+      console.log(activeUserInfo.value.uid == item.who_SendRequest_Uid
+        )
     }
 
   return (
