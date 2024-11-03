@@ -1,9 +1,11 @@
 import React from 'react'
-import CreatGroup from '../components/CreatGroup'
 import UserList from '../components/UserList'
 import FriendReaquest from '../components/FriendReaquest'
 import Friends from '../components/Friends'
 import Blocklist from '../components/Blocklist'
+import MyGroup from '../components/MyGroup'
+import Groups from '../components/Groups'
+
 
 const Feed = () => {
   return (
@@ -12,7 +14,7 @@ const Feed = () => {
     // </div>
     <div class="flex flex-wrap gap-3 my-5 h-[90%]" >
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
-      <CreatGroup/>
+      <Groups/>
     </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
     <Friends/>
@@ -23,7 +25,9 @@ const Feed = () => {
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
       <FriendReaquest/>
     </div>
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'></div>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
+      <MyGroup/>
+    </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
       <Blocklist/>
     </div>
