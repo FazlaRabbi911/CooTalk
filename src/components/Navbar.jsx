@@ -98,8 +98,8 @@ const Navbar = () => {
     <div className='flex flex-col items-end	pr-8	bg-[#05061c] text-white h-screen gap-[7%] '>
        <div className='	w-[80%]  mt-3 ' onClick={() => setShowModal(true)}>
         <div className=' flex justify-end align-items-center'>
-          <div className='w-[80%] justify-center mr-3'>
-            <img className='rounded-full w-100% cursor-pointer '  src={activeUserInfo.photoURL} alt="" />
+          <div className='w-[150px] h-[150px] justify-center mr-3 rounded-full'>
+            <img className='rounded-full w-[100%] cursor-pointer h-[100%] object-cover'  src={activeUserInfo.photoURL} alt="" />
           </div>
         </div>
         <h2 className='mt-4 text-center text-2xl font-mono text-[#c3c8ff] '>{activeUserInfo.displayName}</h2>

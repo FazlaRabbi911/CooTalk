@@ -65,37 +65,52 @@ const MyGroup = () => {
       }).then(()=>{
         remove(ref(db,'GroupJoinRequest/'+item.GrpRequestKey))
       })
-      console.log(item.GrpRequestKey)
+      setgrpmodalOpen(!GrpModalopen)
     }
     let handleRequestDelete=(item)=>{
       remove(ref(db,'GroupJoinRequest/'+item.GrpRequestKey))
-      console.log(item.GrpRequestKey)
+      setgrpmodalOpen(!GrpModalopen)
     }
     let [wwee,setwwee] = useState(true) 
 
-      console.log(GroupRequest.
-        Adminuid
-        )
-
+    let [usegrpMembers,setusegrpMembers] = useState([])
+    let [usegrpMembersSwitch,setusegrpMembersSwitch] = useState(false)
     
+  let handlecgrpmembers=(item)=>{
+    const Gruopdata = ref(db, 'GroupAndMembers');
+    onValue(Gruopdata, (snapshot) => {
+        let arry = []
+      snapshot.forEach((value)=>{
+        setusegrpMembersSwitch(!false)
+        if(value.val().GroupId == item.grpkey){
+          arry.push({...value.val(),grpkey:item.key})
+        }
+        console.log(value.val().GroupId == item.grpkey)
+      })
+      setusegrpMembers(arry)
+    });
+    console.log(usegrpMembers.map((item)=>[0].length
+  ))
+
+  }
   return (
     <div>
     <div className='h-[90%]'>
       <div className='flex justify-between bg-[#272d9859]'>
-        <div className='w-[50%] '><h2 className='font-mono font-bold text-[24px] text-[#d4cff8]  p-2 pl-4 flex gap-2 '> <GrUserAdmin className='text-4xl text-[#efa954f0]' /> My Groups</h2></div>
+        <div className='w-[50%] '><h2 className='font-mono font-bold text-[24px] text-[#d4cff8]  p-2 pl-4 flex gap-2 '> <GrUserAdmin className='text-4xl text-[#efa954f0]'/> My Groups</h2></div>
         <div className='w-[20%] '><h2 className='font-mono font-bold text-[24px] text-[#d4cff8]  p-2 pl-4 flex mr-[-80px] ' onClick={()=>setmodalOpen(true)}> <MdCreateNewFolder className='text-4xl text-[#83aaf7]' /> </h2></div>
-        <div className='w-[20%] flex justify-end items-center'> <button onClick={()=>setgrpmodalOpen(!GrpModalopen)} className='border-[1.1px] px-2 py-2 mr-2  rounded-lg text-[15px] relative'>Requests {GroupRequest == 'sss'  &&  <div className='absolute bottom-1 right-0 text-[#57fd70] font-bold text-[61px] animate-pulse'> .</div>}</button></div>
+        <div className='w-[20%] flex justify-end items-center'> <button onClick={()=>setgrpmodalOpen(!GrpModalopen)} className='border-[1.1px] px-2 py-2 mr-2  rounded-lg text-[15px] relative'>Requests {GroupRequest.map((item)=>item  &&  <div className='absolute bottom-1 right-0 text-[#57fd70] font-bold text-[61px] animate-pulse'> .</div>)}</button></div>
       </div>
       {/* modal */}
       {Modalopen &&
         <div className='absolute top-0 flex justify-center items-center left-0 w-full h-full  backdrop-blur-sm'>
             <div className='p-4 bg-gray-300 rounded-md relative'>
             <IoClose className='absolute top-2 right-2 text-[25px] bg-red text-red-500'onClick={()=>setmodalOpen(!Modalopen)}/>
-                              <button onClick={()=>setgrpmodalOpen(!GrpModalopen)} className='bg-blue-400 p-2 rounded-lg text-[11px]'>Request</button>
                 <h2 className='text-dark font-bold font-sans mb-2'>Creat Group </h2>
 
                 <input onChange={handleGrorupname} className='rounded-md p-1 text-black'  type="text" placeholder='group name' />
                 <button onClick={()=>handleCreatGroup()} className='block bg-blue-700 text-center w-full mt-2 rounded-lg' >Creat</button>
+
             </div>
         </div>
       }{/* modal */}
@@ -104,10 +119,28 @@ const MyGroup = () => {
               <div className=' flex justify-between p-2 items-center h-20 bg-[#2f357692] shadow-2xl rounded-[20px] border-[1px] border-[#f1f1f137] m-3'>
               <div className=' w-[80%] text-left pl-12 '>
                 <h2 className='font-mono font-bold text-[20px] text-[#c9c2ff]'>{item.GroupName}</h2>
-                <p className='font-mono font-bold text-[14px] text-[#c9c2ff] '></p>
               </div>
-              <div  className=' w-[17%] flex '>
+              <div  className='flex '>
+              <button onClick={()=>handlecgrpmembers(item)} className='relative bg-slate-500 shadow-2xl border-[1.5px] p-1.5  rounded-lg font-mono '>Members</button>
+              {usegrpMembersSwitch &&
+                  <div className='absolute top-0 flex justify-center items-center left-0 w-full h-full  backdrop-blur-sm'>
+                      <div className='p-4  rounded-md relative bg-[#131d51f1]'>
+                      <IoClose className='absolute top-0 right-0  text-[35px] bg-red text-red-500'onClick={()=> setusegrpMembersSwitch(!true)}/>
+                      {usegrpMembers.map(item =>(
+                        <div>
+                        <div className='p-5 px-5 flex justify-between  items-center h-10 bg-[#2f3576ea] shadow-2xl rounded-[10px] border-[1px] border-[#f1f1f137] '>
+                        <div className='  text-left  '>
 
+                          <p className='font-mono font-bold text-[14px] text-[#c9c2ff] '> {item.WhoWantJoinName}</p>
+                        </div>
+                      </div>
+                        </div>
+
+                      ))}
+
+                      </div>
+                  </div>
+                }
               </div>
             </div>
       ))}
@@ -119,10 +152,10 @@ const MyGroup = () => {
             <IoClose className='absolute top-0 right-0  text-[35px] bg-red text-red-500'onClick={()=>setgrpmodalOpen(!GrpModalopen)}/>
 
             {GroupRequest.map(item =>(
-              <div className='w-[400px] flex justify-between p-2 items-center h-20 bg-[#2f3576ea] shadow-2xl rounded-[20px] border-[1px] border-[#f1f1f137] m-3'>
+              <div className='w-[440px] flex justify-between p-2 items-center h-20 bg-[#2f3576ea] shadow-2xl rounded-[20px] border-[1px] border-[#f1f1f137] m-3'>
               <div className=' w-[80%] text-left pl-12 '>
                 <h2 className='font-mono font-bold text-[20px] text-[#c9c2ff]'>{item.GroupName}</h2>
-                <p className='font-mono font-bold text-[14px] text-[#c9c2ff] '>{item.WhoWantJoinName}</p>
+                <p className='font-mono font-bold text-[14px] text-[#c9c2ff] '>Request by {item.WhoWantJoinName}</p>
               </div>
               <div  className=' flex gap-3 mr-1'>
                 <button onClick={()=>handleRequestAccept(item)} className='bg-blue-400 p-2 rounded-lg text-[11px]'>Accept</button>
@@ -140,3 +173,5 @@ const MyGroup = () => {
 }
 
 export default MyGroup
+
+

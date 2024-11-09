@@ -13,22 +13,22 @@ const Feed = () => {
     //   <h2 className='text-white'>feed</h2>
     // </div>
     <div class="flex flex-wrap gap-3 my-5 h-[90%]" >
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
       <Groups/>
     </div>
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
     <Friends/>
     </div>
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
     <UserList/>
     </div>
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
       <FriendReaquest/>
     </div>
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
       <MyGroup/>
     </div>
-    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white'>
+    <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white  overflow-scroll'>
       <Blocklist/>
     </div>
   </div>
