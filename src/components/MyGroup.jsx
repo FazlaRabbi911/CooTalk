@@ -50,7 +50,10 @@ const MyGroup = () => {
       onValue(starCountRef, (snapshot) => {
          let arry = []
           snapshot.forEach((item)=>{
-            arry.push({...item.val(),GrpRequestKey:item.key})
+            // console.log(Admin.uid == item.Adminuid)
+            if(Admin.uid == item.val().Adminuid){
+              arry.push({...item.val(),GrpRequestKey:item.key})
+            }
           })
           setGroupRequest(arry)
           // console.log(arry[0])
@@ -68,14 +71,20 @@ const MyGroup = () => {
       remove(ref(db,'GroupJoinRequest/'+item.GrpRequestKey))
       console.log(item.GrpRequestKey)
     }
+    let [wwee,setwwee] = useState(true) 
 
+      console.log(GroupRequest.
+        Adminuid
+        )
+
+    
   return (
     <div>
     <div className='h-[90%]'>
       <div className='flex justify-between bg-[#272d9859]'>
-        <h2 className='font-mono font-bold text-[24px] text-[#d4cff8]  p-2 pl-4 flex gap-2 '> <GrUserAdmin className='text-4xl text-[#efa954f0]' /> My Groups</h2>
-        <h2 className='font-mono font-bold text-[24px] text-[#d4cff8]  p-2 pl-4 flex mr-[-80px] ' onClick={()=>setmodalOpen(true)}> <MdCreateNewFolder className='text-4xl text-[#83aaf7]' /> </h2>
-        <button onClick={()=>setgrpmodalOpen(!GrpModalopen)} className='bg-blue-400 px-2 rounded-lg text-[15px]'>Requests</button>
+        <div className='w-[50%] '><h2 className='font-mono font-bold text-[24px] text-[#d4cff8]  p-2 pl-4 flex gap-2 '> <GrUserAdmin className='text-4xl text-[#efa954f0]' /> My Groups</h2></div>
+        <div className='w-[20%] '><h2 className='font-mono font-bold text-[24px] text-[#d4cff8]  p-2 pl-4 flex mr-[-80px] ' onClick={()=>setmodalOpen(true)}> <MdCreateNewFolder className='text-4xl text-[#83aaf7]' /> </h2></div>
+        <div className='w-[20%] flex justify-end items-center'> <button onClick={()=>setgrpmodalOpen(!GrpModalopen)} className='border-[1.1px] px-2 py-2 mr-2  rounded-lg text-[15px] relative'>Requests {GroupRequest == 'sss'  &&  <div className='absolute bottom-1 right-0 text-[#57fd70] font-bold text-[61px] animate-pulse'> .</div>}</button></div>
       </div>
       {/* modal */}
       {Modalopen &&

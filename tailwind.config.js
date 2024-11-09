@@ -12,6 +12,12 @@ export default {
       },
       fontSize: {
         sml: '16px',
+      },
+      keyframes: {
+        wiggle: {
+          '0%, 100%': { opacity:'100%'},
+          '50%': { opacity: '0%' },
+        }
       }
     },
   },
