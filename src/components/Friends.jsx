@@ -1,14 +1,18 @@
 import { getDatabase, onValue, push, ref,remove,set } from 'firebase/database';
 import React, { useEffect, useState } from 'react'
 import { FaUserFriends } from "react-icons/fa";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { VscThreeBars } from "react-icons/vsc";
 import { GoBellFill } from "react-icons/go";
+import { activeMsguser } from '../activeMsgSlice';
+import { useNavigate } from 'react-router-dom';
 
 
 const Friends = () => {
     const db = getDatabase();
+    let dispatch = useDispatch()
     let activeUserInfo = useSelector((state)=>state.storeuser.value)
+    let navigate = useNavigate()
     let [Frinddata, setFrinddata]= useState([])
     useEffect(()=>{
         const starCountRef = ref(db, 'friend/' );
@@ -55,10 +59,23 @@ const Friends = () => {
             remove(ref(db,"friend/" + item.FrndDBkey))
           });
         }
-      console.log(activeUserInfo.value.uid == item.who_SendRequest_Uid
-        )
     }
-
+    let handleactivemassage =(item)=>{
+      if(activeUserInfo.uid == item.who_SendRequest_Uid){
+          dispatch(activeMsguser({
+            activeUseName:item.Receiver_Name,
+            activeuseUid:item.Receiver_Uid,
+            activeuserProfile:item.Receiver_profile
+          }))
+      }else{
+          dispatch(activeMsguser({
+            activeUseName:item.who_SendRequest_Name,
+            activeuseUid:item.who_SendRequest_Uid,
+            activeuserProfile:item.who_SendRequest_profile            
+          }))
+      }
+      navigate('/home/massage')
+    }
   return (
     <div >
      <div className='h-[90%] '>
@@ -74,11 +91,11 @@ const Friends = () => {
                  <div className='truncate	group  border-[#2b3462] w-[100%] rounded-lg h-[100%] '>
                   <div className=' relative'>
 
-                    <div  className={`${friendListOption ? 'duration-300	 flex justify-between p-2 items-center h-20 bg-[#353b7d] shadow-2xl rounded-[20px]  m-3'
+                      <div onClick={()=>handleactivemassage(item)} className={`${friendListOption ? 'duration-300	 flex justify-between p-2 items-center h-20 bg-[#353b7d] shadow-2xl rounded-[20px]  m-3'
                       :
                       'z-1 transform  -translate-x-[200px] duration-300 flex justify-between p-2 items-center h-20 bg-[#353b7d] shadow-2xl rounded-[20px] border-[1px] border-[#f1f1f137] m-3 drop-shadow-2xl "'
                     }`} >
-                          <div className=' w-[20%] rounded-lg h-[100%] '>
+                          <div className=' w-[20%] rounded-lg h-[100%]  '>
                           {item.Receiver_Uid == activeUserInfo.uid 
                             ?
                             <img className="rounded-[20px] h-[100%] ml-2" src={item.who_SendRequest_profile}/>

@@ -18,6 +18,9 @@ export default {
           '0%, 100%': { opacity:'100%'},
           '50%': { opacity: '0%' },
         }
+      },
+      backgroundImageForchat: {
+        'chatbg': "url('/src/assets/chatimg.png')",
       }
     },
   },

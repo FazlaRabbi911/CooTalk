@@ -12,7 +12,7 @@ const Feed = () => {
     // <div className='h-screen'>
     //   <h2 className='text-white'>feed</h2>
     // </div>
-    <div class="flex flex-wrap gap-3 my-5 h-[90%]" >
+  <div class="flex flex-wrap gap-3 my-5 h-[90%]" >
     <div className='bg-[#242c59e0] w-[32%] h-[49%] rounded-[10px] text-white overflow-scroll'>
       <Groups/>
     </div>

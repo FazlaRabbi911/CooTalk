@@ -102,7 +102,7 @@ const Navbar = () => {
             <img className='rounded-full w-[100%] cursor-pointer h-[100%] object-cover'  src={activeUserInfo.photoURL} alt="" />
           </div>
         </div>
-        <h2 className='mt-4 text-center text-2xl font-mono text-[#c3c8ff] '>{activeUserInfo.displayName}</h2>
+        <h2 className=' mt-4 text-right text-2xl font-mono text-[#c3c8ff] '>{activeUserInfo.displayName}</h2>
         </div>
         <div><Link to='/home/feed' ><div className={`${ location.pathname =="/home/feed" ? 'rounded-3xl p-2 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-1	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><SiHomeadvisor className='text-[60px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/> <div className={`${ location.pathname == "/home/feed" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px]  top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
         <div><Link className={location.pathname =="/home/massage" && "active"} to='/home/massage' ><div className={`${ location.pathname =="/home/massage" ? 'rounded-3xl p-3 relative bg-[#2e2e8f] transition-all delay-100 ease-in-out	 duration-300 group': 'bg-[#404042] rounded-3xl p-2	relative transition-all delay-100 ease-in-out	 duration-300 group'}`}><FaEnvelopeOpenText className='text-[44px] text-[#d4d4db]  shadow-lg rounded-3xl shadow-[#000000]'/>    <div className={`${ location.pathname == "/home/massage" ?  'absolute bg-white h-10 duration-300  rounded-xl w-2 left-[-50px] top-4 ' : 'absolute bg-white  duration-300 h-0 rounded-xl w-2 left-[-50px] top-4 '}`}></div></div></Link></div>
