@@ -17,10 +17,12 @@ const Massage = () => {
       <Groups/>
     </div>
       </div>
-
-    <div className="bg-[url('/src/assets/chatimg.png')] bg-contain	scrollbar	 bg-size w-[62%] h-[90%] rounded-[10px] text-white overflow-y-scroll ">
-      
-      <MassageSender/>
+    <div className='w-[62%] h-[90%] relative'>
+      <div className="bg-gradient-overlay  bg-contain	scrollbar	w-full h-full bg-size  rounded-[10px] text-white overflow-y-scroll  ">
+        <div className=' '>
+          <MassageSender/>
+        </div>
+      </div>
     </div>
 
   </div>

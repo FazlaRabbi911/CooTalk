@@ -10,7 +10,7 @@
   
     .scrollbar::-webkit-scrollbar-track {
       border-radius: 10vh;
-      background: #332c5a91;
+      background: #1e1e1e72;
     }
   
     .scrollbar::-webkit-scrollbar-thumb {
@@ -21,5 +21,13 @@
   
     .scrollbar::-webkit-scrollbar-thumb:hover {
       background: #ebe2e9;
+    }
+
+    .bg-gradient-overlay {
+      background: linear-gradient(rgba(51, 51, 51, 0.384), rgba(5, 5, 5, 0.674)),
+        url('/src/assets/chatimg.png');
+      background-size:contain;
+      background-position: center;
+
     }
   }
