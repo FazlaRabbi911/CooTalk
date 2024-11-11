@@ -30,4 +30,34 @@
       background-position: center;
 
     }
+
+    /* Target the scrollbar */
+/* Container padding to offset scrollbar */
+
+/* Custom scrollbar styling */
+
+.inputcustom-scrollbar::-webkit-scrollbar {
+  width:10px;
+  margin-left: 100px;
+  z-index: 999;
+  border-radius: 100%;
+}
+.inputcustom-scrollbar::-webkit-scrollbar:hover{
+  width: 30px;
+  height: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+.inputcustom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 2px solid #3f35c6;
+}
+
+.inputcustom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
   }
