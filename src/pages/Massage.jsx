@@ -45,7 +45,7 @@ const Massage = () => {
     </div>
       </div>
 
-    <div className='w-[62%] h-[80%] relative '>
+    <div className='w-[62%] h-[85%] relative '>
       <div className='flex h-[15%] absolute top-0 left-0 z-10	rounded-xl  justify-between items-center p-1 bg-[#0000008d] '>  
           <div  className= 'duration-300 h-full	 flex justify-between p-2 items-center  bg-[#232752] shadow-2xl rounded-[20px]  m-3' >
                     <div className=' w-[150px] rounded-lg  h-full '>
