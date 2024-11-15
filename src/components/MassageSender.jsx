@@ -16,10 +16,10 @@ const MassageSender = () => {
   let Admin = useSelector((state)=>state.storeuser.value)
   let activesmguser = useSelector((state)=>state.storactiveMsg.value)
   const [text, setText] = useState('');
-
   const textareaRef = useRef(null);
   let [taxtarheight,settaxtarheight] = useState(``)
-
+  let [msgData , setmsgData ] = useState('')
+  let [sendEmoji,SetsendEmoji] = useState(false)// emoji switch
   let handleInputChange=(e)=>{
     setText(e.target.value)
     if(e.target.value ){
@@ -34,7 +34,7 @@ const MassageSender = () => {
     }
   
   }
-  let [msgData , setmsgData ] = useState('')
+
 
   let handleMsgSend=()=>{
     set(push(ref(db, 'Massages' )), {
@@ -45,9 +45,12 @@ const MassageSender = () => {
       Massage_Reciver_Name:activesmguser.activeUseName,
       Massage:msgData,
       Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
-    });
-    setText('');
-    settaxtarheight('40px')
+    }).then(()=>{
+      setText('');
+      SetsendEmoji(false)
+      settaxtarheight('40px')
+      setmsgData('')
+    })
   }
   if(textareaRef.current){
     textareaRef.current.style.height = taxtarheight;
@@ -118,7 +121,12 @@ let handleactivemassage =(item)=>{
   setforwardmassageModal(!forwardmassageModal)
   setforwardshow(!forwardshow)
 }
-let [sendEmoji,SetsendEmoji] = useState(false)// emoji switch
+
+ let emojiData=(e)=>{
+  setmsgData(msgData+e.emoji)
+  setText(msgData+e.emoji)
+  console.log(e)
+ }
 
       const renderMessage = (item) => { // I divided this part, cause it was re-rendering 
         const isSender = item.massage_Sender_uid === Admin.uid;
@@ -149,14 +157,14 @@ let [sendEmoji,SetsendEmoji] = useState(false)// emoji switch
         <div >
         <div className='my-[35px] '>{showmassage &&  showmassage.map(renderMessage)}</div>
         </div>
-        <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-8 p-3   gap-2 overflow-hidden'>
+        <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-7 p-3   gap-2 overflow-hidden'>
           <div className='flex justify-center items-center'>
               {/* <input   type="text" placeholder='text'/> */}
               <div className='w-[80%] relative'>
               <textarea  value={text} ref={textareaRef} onChange={(e)=>handleInputChange(e)}
-               className='bg- pt-2 pl-6 text-xl font-mono pr-8 max-h-[240px]  overflow-y-auto resize-none hover:resize w-[100%]  font-bold    bg-[#2d324d88] break-words rounded-3xl inputcustom-scrollbar ' id="autoGrowTextarea" rows="2" placeholder="Type here..."
+               className='bg- pt-2 pl-6 text-xl font-mono pr-8 max-h-[240px] h-10 overflow-y-auto resize-none hover:resize w-[100%]  font-bold    bg-[#2d324d88] break-words rounded-3xl inputcustom-scrollbar ' id="autoGrowTextarea" rows="2" placeholder="Type here..."
                ></textarea><FaSmile onClick={()=>SetsendEmoji(!sendEmoji)} className={`absolute right-2 text-2xl top-[16%] text-gray-300 cursor-pointer ${sendEmoji && 'text-green-400'}`} />
-              </div>
+               </div>
               {/* <taxtarea>sd</taxtarea> */}
               {activesmguser && text&&
               <div >  
@@ -168,10 +176,10 @@ let [sendEmoji,SetsendEmoji] = useState(false)// emoji switch
               </div>  
               }
           </div>
-              {sendEmoji&&
+              {sendEmoji &&  
                 <div className='flex justify-center h-[10%] py-3 '>
                 <div className='overflow-hidden'>
-                <EmojiPicker emojiStyle={"facebook"} Theme={'dark'} width={450}/>
+                <EmojiPicker onEmojiClick={emojiData}  emojiStyle={"facebook"} Theme={'dark'} width={450}/>
                 </div>
                 </div>
               }
