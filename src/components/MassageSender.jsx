@@ -168,7 +168,7 @@ let handleactivemassage =(item)=>{
               {/* <taxtarea>sd</taxtarea> */}
               {activesmguser && text&&
               <div >  
-                  <button onClick={() => handleMsgSend()} className="relative group">
+                  <button onClick={() => handleMsgSend()} className="relative group ml-4">
                    <RiSendPlaneFill className="z-50 text-[#8da7ba] ease-out group-hover:text-[#44b1ff] text-4xl" />
                    <RiSendPlaneFill className=" absolute z-0 top-2 left-2 text-[#29a6ff] transform  transition-transform duration-200 ease-out text-4xl opacity-0 group-active:opacity-100 group-active:translate-x-10 group-active:-translate-y-10 shadow-[#79a1ff53] "
                    />
