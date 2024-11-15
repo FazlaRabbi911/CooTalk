@@ -30,7 +30,6 @@ const Massage = () => {
  },[activesmguser])
   useEffect(() => {
     containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    console.log(containerRef.current.scrollHeight)
   }, [showmassage]);
 
 

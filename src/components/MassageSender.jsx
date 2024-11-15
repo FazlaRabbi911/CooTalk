@@ -6,9 +6,11 @@ import { TiArrowSortedUp } from "react-icons/ti";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { PiShareFatFill } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
+import { FaSmile } from "react-icons/fa";
 
 
 import moment from 'moment'
+import EmojiPicker from 'emoji-picker-react';
 const MassageSender = () => {
   const db = getDatabase();
   let Admin = useSelector((state)=>state.storeuser.value)
@@ -64,7 +66,7 @@ const MassageSender = () => {
         setshowmassage(arry)
       });
  },[activesmguser])
-let [forwardshow,setforwardshow]=useState(true)
+let [forwardshow,setforwardshow]=useState(false)
 let handleforwardSwitch=()=>{
   setforwardshow(!forwardshow)
 }
@@ -116,11 +118,13 @@ let handleactivemassage =(item)=>{
   setforwardmassageModal(!forwardmassageModal)
   setforwardshow(!forwardshow)
 }
+let [sendEmoji,SetsendEmoji] = useState(false)// emoji switch
+
       const renderMessage = (item) => { // I divided this part, cause it was re-rendering 
         const isSender = item.massage_Sender_uid === Admin.uid;
         return (
           <p 
-            className={isSender ? 'text-right ' : 'text-left ml-2'}
+            className={isSender ? 'text-right ' : 'text-left ml-2'} 
             key={`${item.massage_Sender_uid}-${item.Massage_Reciver_uid}-${item.Massage}`}
           >
             <div>
@@ -145,18 +149,31 @@ let handleactivemassage =(item)=>{
         <div >
         <div className='my-[35px] '>{showmassage &&  showmassage.map(renderMessage)}</div>
         </div>
-        <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-8 p-3  flex justify-center gap-2 overflow-hidden'>
+        <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-8 p-3   gap-2 overflow-hidden'>
+          <div className='flex justify-center items-center'>
               {/* <input   type="text" placeholder='text'/> */}
+              <div className='w-[80%] relative'>
               <textarea  value={text} ref={textareaRef} onChange={(e)=>handleInputChange(e)}
-               className=' pt-2 pl-6 text-xl font-mono pr-6 max-h-[240px]  overflow-y-auto resize-none hover:resize w-[80%]  font-bold    bg-[#2d324d88] break-words rounded-3xl inputcustom-scrollbar relative' id="autoGrowTextarea" rows="2" placeholder="Type here..."
-               ></textarea>
+               className='bg- pt-2 pl-6 text-xl font-mono pr-8 max-h-[240px]  overflow-y-auto resize-none hover:resize w-[100%]  font-bold    bg-[#2d324d88] break-words rounded-3xl inputcustom-scrollbar ' id="autoGrowTextarea" rows="2" placeholder="Type here..."
+               ></textarea><FaSmile onClick={()=>SetsendEmoji(!sendEmoji)} className={`absolute right-2 text-2xl top-[16%] text-gray-300 cursor-pointer ${sendEmoji && 'text-green-400'}`} />
+              </div>
               {/* <taxtarea>sd</taxtarea> */}
               {activesmguser && text&&
+              <div >  
                   <button onClick={() => handleMsgSend()} className="relative group">
                    <RiSendPlaneFill className="z-50 text-[#8da7ba] ease-out group-hover:text-[#44b1ff] text-4xl" />
                    <RiSendPlaneFill className=" absolute z-0 top-2 left-2 text-[#29a6ff] transform  transition-transform duration-200 ease-out text-4xl opacity-0 group-active:opacity-100 group-active:translate-x-10 group-active:-translate-y-10 shadow-[#79a1ff53] "
                    />
                   </button>
+              </div>  
+              }
+          </div>
+              {sendEmoji&&
+                <div className='flex justify-center h-[10%] py-3 '>
+                <div className='overflow-hidden'>
+                <EmojiPicker emojiStyle={"facebook"} Theme={'dark'} width={450}/>
+                </div>
+                </div>
               }
         </div>
         {forwardmassageModal &&
