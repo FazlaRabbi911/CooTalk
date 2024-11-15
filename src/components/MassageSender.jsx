@@ -185,13 +185,13 @@ let handleactivemassage =(item)=>{
               }
         </div>
         {forwardmassageModal &&
-            <div className='absolute top-0 flex justify-center items-center left-0 w-full h-[90%]  backdrop-blur-sm overflow-y-scroll'>
+            <div className='absolute top-[16%] flex justify-center items-center left-0 w-full h-[100%]  backdrop-blur-sm overflow-y-scroll'>
             <div className='p-4  rounded-md  relative '>
               <div className='sticky flex justify-end top-[50%] ml-44 text-right w-full  '>
                 <IoClose className='cursor-pointer text-[35px] bg-red text-red-500'onClick={()=>setforwardmassageModal(!forwardmassageModal)}/>
               </div>
             {Frinddata.map(item=>( 
-                 <div className='truncate	group cursor-pointer border-[#2b3462] w-[400px] rounded-lg h-[100%]'>
+                 <div className='truncate	group cursor-pointer border-[#2b3462] w-[400px] rounded-lg h-[100%] '>
                   <div className=' relative'>
                       <div onClick={()=>handleactivemassage(item)} className='duration-300	 flex justify-between p-2 items-center h-20 bg-[#353b7d] shadow-2xl rounded-[20px]  m-3 ' >
                           <div className=' w-[30%] rounded-lg h-[100%]  '>
