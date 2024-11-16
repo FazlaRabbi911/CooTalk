@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { FaLayerGroup } from "react-icons/fa";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { VscLoading } from "react-icons/vsc";
-
 
 const Groups = () => {
   const db = getDatabase();
   let Admin = useSelector((state)=>state.storeuser.value)
-
+  let dispatch = useDispatch()
     let [groupdata,setgroupdata]= useState([])
     useEffect(()=>{
         const Gruopdata = ref(db, 'Groups');
@@ -56,13 +55,14 @@ const Groups = () => {
           setGroupRequestdata(arry)
         })
     },[])
+
   return (
 
      <div className='h-[90%] '>
       <h2 className='font-mono font-bold text-[24px] text-[#d4cff8] bg-[#272d9859] p-2 pl-4 flex gap-2	'> <FaLayerGroup className='text-4xl text-[#386cb0]' /> Groups</h2>
       {groupdata.map(item =>(
          GroupMemberdata.includes( item.grpkey + Admin.uid) ?
-              <div className=' flex justify-between p-2 items-center h-20  bg-[#2f357692] shadow-2xl rounded-[20px] border-[1px] border-[#04ff437d] m-3'>
+              <div onClick={()=>handleGrpSlice(item)} className=' flex justify-between p-2 items-center h-20  bg-[#2f357692] shadow-2xl rounded-[20px] border-[1px] border-[#04ff437d] m-3'>
               <div className=' w-[60%] text-left pl-8 '>
                 <h2 className='font-mono font-bold text-[20px] text-[#c9c2ff]'>{item.GroupName}</h2>
                 <p className='font-mono font-bold text-[14px] text-[#c9c2ff] pt-2'>Admin : {item.AdminName}</p>

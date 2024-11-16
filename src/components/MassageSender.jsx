@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import { RiSendPlaneFill } from "react-icons/ri";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { TiArrowSortedUp } from "react-icons/ti";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { PiShareFatFill } from "react-icons/pi";
@@ -14,14 +14,24 @@ import EmojiPicker from 'emoji-picker-react';
 const MassageSender = () => {
   const db = getDatabase();
   let Admin = useSelector((state)=>state.storeuser.value)
-  let activesmguser = useSelector((state)=>state.storactiveMsg.value)
+
+  let activesmguser = useSelector((state)=>state.storactiveMsg.value)   //onclick massage slice
+  let groupdata = useSelector((state)=>state.groupdataStore.value)      //onclick group slice
+  
   const [text, setText] = useState('');
+  const [GroupMsg, setGroupMsg] = useState('');
+    
+
   const textareaRef = useRef(null);
   let [taxtarheight,settaxtarheight] = useState(``)
   let [msgData , setmsgData ] = useState('')
   let [sendEmoji,SetsendEmoji] = useState(false)// emoji switch
   let handleInputChange=(e)=>{
-    setText(e.target.value)
+    if(activesmguser){
+      setText(e.target.value)
+    }else if(groupdata){
+      setGroupMsg(e.target.value)
+    }
     if(e.target.value ){
 
       if(textareaRef.current){
@@ -37,20 +47,38 @@ const MassageSender = () => {
 
 
   let handleMsgSend=()=>{
-    set(push(ref(db, 'Massages' )), {
-      massage_Sender_uid:Admin.uid,
-      massage_Sender_Name:Admin.displayName,
+    if(activesmguser){
+      set(push(ref(db, 'Massages' )), {
+        massage_Sender_uid:Admin.uid,
+        massage_Sender_Name:Admin.displayName,
+  
+        Massage_Reciver_uid:activesmguser.activeuseUid,
+        Massage_Reciver_Name:activesmguser.activeUseName,
+        Massage:msgData,
+        Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
+      }).then(()=>{
+        setText('');
+        SetsendEmoji(false)
+        settaxtarheight('40px')
+        setmsgData('')
+      })
+    }else if(groupdata){
+      set(push(ref(db, 'GroupMassage' )), {
+        whosendGRP_MSG_Uid:Admin.uid,
+        whosendGRP_MSG_Name:Admin.displayName,
+  
+        group_UId:groupdata.grpkey,
+        GroupName_Name:groupdata.GroupName,
+        Massage:GroupMsg,
+        Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
+      }).then(()=>{
+        SetsendEmoji(false)
+        settaxtarheight('40px')
+        setGroupMsg('')
+        SetsendEmoji(false)
+      })
+    }
 
-      Massage_Reciver_uid:activesmguser.activeuseUid,
-      Massage_Reciver_Name:activesmguser.activeUseName,
-      Massage:msgData,
-      Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
-    }).then(()=>{
-      setText('');
-      SetsendEmoji(false)
-      settaxtarheight('40px')
-      setmsgData('')
-    })
   }
   if(textareaRef.current){
     textareaRef.current.style.height = taxtarheight;
@@ -69,6 +97,7 @@ const MassageSender = () => {
         setshowmassage(arry)
       });
  },[activesmguser])
+
 let [forwardshow,setforwardshow]=useState(false)
 let handleforwardSwitch=()=>{
   setforwardshow(!forwardshow)
@@ -121,11 +150,26 @@ let handleactivemassage =(item)=>{
   setforwardmassageModal(!forwardmassageModal)
   setforwardshow(!forwardshow)
 }
-
+  let [groupMsgData,setgroupMsgData] = useState([])
+  useEffect(()=>{
+    const starCountRef = ref(db, 'GroupMassage' );
+    onValue(starCountRef, (snapshot) => {
+      let arry = []
+        snapshot.forEach((item)=>{
+          if( groupdata.grpkey == item.val().group_UId){
+              arry.push(item.val())
+          }
+        })
+        setgroupMsgData(arry)
+    });
+  },[groupdata])
  let emojiData=(e)=>{
-  setmsgData(msgData+e.emoji)
-  setText(msgData+e.emoji)
-  console.log(e)
+  if(activesmguser){
+    setmsgData(msgData+e.emoji)
+    setText(msgData+e.emoji)
+  }else if(groupdata)
+
+    setGroupMsg(GroupMsg+e.emoji)
  }
 
       const renderMessage = (item) => { // I divided this part, cause it was re-rendering 
@@ -151,22 +195,55 @@ let handleactivemassage =(item)=>{
           </p>
         );
       };
+      const renderGroupMessage = (item) => { // I divided this part, cause it was re-rendering 
+        const isSender = item.whosendGRP_MSG_Uid == Admin.uid;
+        return (
+          <p 
+            className={isSender ? 'text-right ' : 'text-left ml-2'} 
+            key={`${item.whosendGRP_MSG_Uid}-${item.group_UId }-${item.Massage }`}
+          >
+            <div>
+              {forwardshow && isSender && <span><PiShareFatFill onClick={()=>ForwardMassage(item)} className={isSender && ' transform scale-x-[-1] mr-3 inline-block text-xl cursor-pointer' }/></span>}
+              <span onClick={handleforwardSwitch} className="text-xl font-mono bg-[#293061] m-5 p-4 rounded-xl inline-block relative">
+                  {item.Massage} <p className='text-sm mt-1 font-bold text-gray-500 font-mono'>{item.whosendGRP_MSG_Name}</p>
+                  <TiArrowSortedUp
+                    className={`text-[#293061] rotate-60 absolute top-[-9px] ${
+                      isSender ? 'right-[-30px]' : 'left-[-30px]'
+                    } text-6xl`}
+                  />
+
+                </span>
+                {forwardshow && !isSender && <span onClick={()=>ForwardMassage(item)} className='rotate-0 inline-block text-xl cursor-pointer'><PiShareFatFill /></span>}
+              </div>
+            <p className='text-[#8f8e8e79] font-mono text-[15px] mt-[-10px]'>{moment(item.Time, 'YYYYMMDD h:mm:ss ').fromNow()}</p>
+          </p>
+        );
+      };
   return (
 
     <div>
         <div >
-        <div className='my-[35px] '>{showmassage &&  showmassage.map(renderMessage)}</div>
+        <div className='my-[35px] '>{activesmguser  && showmassage  ?  showmassage.map(renderMessage) :groupdata && groupMsgData.map(renderGroupMessage)}</div>
         </div>
         <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-7 p-3   gap-2 overflow-hidden'>
           <div className='flex justify-center items-center'>
               {/* <input   type="text" placeholder='text'/> */}
               <div className='w-[80%] relative'>
-              <textarea  value={text} ref={textareaRef} onChange={(e)=>handleInputChange(e)}
+              <textarea  value={activesmguser ?  text : groupdata &&  GroupMsg } ref={textareaRef} onChange={(e)=>handleInputChange(e)}
                className='bg- pt-2 pl-6 text-xl font-mono pr-8 max-h-[240px] h-10 overflow-y-auto resize-none hover:resize w-[100%]  font-bold    bg-[#2d324d88] break-words rounded-3xl inputcustom-scrollbar ' id="autoGrowTextarea" rows="2" placeholder="Type here..."
                ></textarea><FaSmile onClick={()=>SetsendEmoji(!sendEmoji)} className={`absolute right-2 text-2xl top-[16%] text-gray-300 cursor-pointer ${sendEmoji && 'text-green-400'}`} />
                </div>
               {/* <taxtarea>sd</taxtarea> */}
-              {activesmguser && text&&
+              {groupdata &&  GroupMsg &&
+              <div >  
+                  <button onClick={() => handleMsgSend()} className="relative group ml-4">
+                   <RiSendPlaneFill className="z-50 text-[#8da7ba] ease-out group-hover:text-[#44b1ff] text-4xl" />
+                   <RiSendPlaneFill className=" absolute z-0 top-2 left-2 text-[#29a6ff] transform  transition-transform duration-200 ease-out text-4xl opacity-0 group-active:opacity-100 group-active:translate-x-10 group-active:-translate-y-10 shadow-[#79a1ff53] "
+                   />
+                  </button>
+              </div>  
+              }
+              {activesmguser &&  text &&
               <div >  
                   <button onClick={() => handleMsgSend()} className="relative group ml-4">
                    <RiSendPlaneFill className="z-50 text-[#8da7ba] ease-out group-hover:text-[#44b1ff] text-4xl" />
@@ -220,5 +297,4 @@ let handleactivemassage =(item)=>{
     </div>
   )
 }
-
 export default MassageSender

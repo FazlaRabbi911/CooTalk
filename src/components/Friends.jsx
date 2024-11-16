@@ -6,7 +6,7 @@ import { VscThreeBars } from "react-icons/vsc";
 import { GoBellFill } from "react-icons/go";
 import { activeMsguser } from '../activeMsgSlice';
 import { useNavigate } from 'react-router-dom';
-
+import { groupdata12 } from '../groupSlice';
 
 const Friends = () => {
     const db = getDatabase();
@@ -61,6 +61,7 @@ const Friends = () => {
         }
     }
     let handleactivemassage =(item)=>{
+      dispatch(groupdata12())
       if(activeUserInfo.uid == item.who_SendRequest_Uid){
           dispatch(activeMsguser({
             activeUseName:item.Receiver_Name,
