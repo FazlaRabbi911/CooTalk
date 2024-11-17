@@ -20,7 +20,6 @@ const Massage = () => {
 
   let activesmguser = useSelector((state)=>state.storactiveMsg.value)
   let groupSlice = useSelector((state)=>state.groupdataStore.value)
-  let  catchJoinedgroup =Joinedgroup.map((item)=> item)
   let [showmassage,setshowmassage] = useState([])
   useEffect(()=>{
       const massagedata = ref(db, 'Massages');
@@ -36,43 +35,32 @@ const Massage = () => {
       });
   },[activesmguser])
       let [groupdata,setgroupdata]= useState([])
-      useEffect(()=>{
-        const Gruopdata = ref(db, 'Groups');
-        onValue(Gruopdata, (snapshot) => {
-            let arry = []
-          snapshot.forEach((item)=>{
-            // if(catchJoinedgroup[0].GrpRequestKey === item.key){
-              console.log(catchJoinedgroup.GrpRequestKey === item.key)
-              // arry.push({...item.val(),grpkey:item.key})
-            // }
-          })
-          setgroupdata(arry)
-        });
-      },[Admin])
-
     useEffect(()=>{                          // group massage
       const massagedata =  ref(db, 'GroupAndMembers');                      // problem is i can send grp sms in any group tho im not engaged 
       onValue( massagedata, (snapshot) => {
         let arry =[]
         snapshot.forEach((item)=> {
-          if( groupSlice.grpkey == item.val().GroupId){
-            // if(item.val().Adminuid == Admin.uid || item.val().WhoWantJoinUid == Admin.uid){
-              arry.push(item.val())
-            // }else{
-            //   console.log('left')
-            // }
+          if(item.val().Adminuid == Admin.uid ){
+            if(!item.val().WhoWantJoinUid ){
+              arry.push(item.val()) 
+              console.log(item.val())
+            }
+          }else if( item.val().WhoWantJoinUid ==  Admin.uid  ){
+            arry.push(item.val()) 
           }
         })
-        setJoinedgroup(arry)
+        setgroupdata(arry)
       });
     },[])
+
+
     let [groupMsgData,setgroupMsgData] = useState([])
     useEffect(()=>{
       const starCountRef = ref(db, 'GroupMassage' );
       onValue(starCountRef, (snapshot) => {
         let arry = []
           snapshot.forEach((item)=>{
-            if( groupdata.grpkey == item.val().group_UId){
+            if( groupdata.GroupMemberId == item.val().GroupMemberId){
                 arry.push(item.val())
             }
           })
@@ -84,9 +72,10 @@ const Massage = () => {
   }, [showmassage,groupMsgData]);
 
   let handleGrpSlice=(item)=>{
-    dispatch(activeMsguser())
-    dispatch(groupdata12(item))
-    // console.log(item)
+      dispatch(activeMsguser())
+      dispatch(groupdata12())
+      dispatch(groupdata12(item))
+
   }
   
   return (
@@ -127,7 +116,7 @@ const Massage = () => {
                             activesmguser.activeUseName
                             : "Select to send massage"
                             }</h2>
-                            {groupSlice && <p className='text-gray-300 pt-2 text-xl'>{groupSlice.AdminUid == Admin.uid ? "My Group" : groupSlice.AdminName}</p>}
+                            {groupSlice && <p className='text-gray-300 pt-2 text-xl'>{groupSlice.Adminuid == Admin.uid ? "My Group" : groupSlice.AdminName}</p>}
                       </div>
             </div>
         </div>

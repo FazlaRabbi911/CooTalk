@@ -26,6 +26,7 @@ const MassageSender = () => {
   let [taxtarheight,settaxtarheight] = useState(``)
   let [msgData , setmsgData ] = useState('')
   let [sendEmoji,SetsendEmoji] = useState(false)// emoji switch
+  let [groupMsgData,setgroupMsgData] = useState([])
   let handleInputChange=(e)=>{
     if(activesmguser){
       setText(e.target.value)
@@ -67,7 +68,7 @@ const MassageSender = () => {
         whosendGRP_MSG_Uid:Admin.uid,
         whosendGRP_MSG_Name:Admin.displayName,
   
-        group_UId:groupdata.grpkey,
+        GroupAndMemberId:groupdata.GroupAndMemberId,
         GroupName_Name:groupdata.GroupName,
         Massage:GroupMsg,
         Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
@@ -150,15 +151,18 @@ let handleactivemassage =(item)=>{
   setforwardmassageModal(!forwardmassageModal)
   setforwardshow(!forwardshow)
 }
-  let [groupMsgData,setgroupMsgData] = useState([])
+
   useEffect(()=>{
     const starCountRef = ref(db, 'GroupMassage' );
     onValue(starCountRef, (snapshot) => {
       let arry = []
         snapshot.forEach((item)=>{
-          if( groupdata.grpkey == item.val().group_UId){
+          if( groupdata.GroupAndMemberId == item.val().GroupAndMemberId){
+          
               arry.push(item.val())
+            
           }
+          console.log(item.val())
         })
         setgroupMsgData(arry)
     });
@@ -196,11 +200,11 @@ let handleactivemassage =(item)=>{
         );
       };
       const renderGroupMessage = (item) => { // I divided this part, cause it was re-rendering 
-        const isSender = item.whosendGRP_MSG_Uid == Admin.uid;
+        const isSender = item.whosendGRP_MSG_Uid  == Admin.uid;
         return (
           <p 
             className={isSender ? 'text-right ' : 'text-left ml-2'} 
-            key={`${item.whosendGRP_MSG_Uid}-${item.group_UId }-${item.Massage }`}
+            key={`${item.whosendGRP_MSG_Uid}-${item.GroupAndMemberId}-${item.Massage }`}
           >
             <div>
               {forwardshow && isSender && <span><PiShareFatFill onClick={()=>ForwardMassage(item)} className={isSender && ' transform scale-x-[-1] mr-3 inline-block text-xl cursor-pointer' }/></span>}
@@ -223,7 +227,7 @@ let handleactivemassage =(item)=>{
 
     <div>
         <div >
-        <div className='my-[35px] '>{activesmguser  && showmassage  ?  showmassage.map(renderMessage) :groupdata && groupMsgData.map(renderGroupMessage)}</div>
+        <div className='my-[35px] '>{activesmguser  && showmassage  ?  showmassage.map(renderMessage) : groupdata && groupMsgData && groupMsgData.map(renderGroupMessage)}</div>
         </div>
         <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-7 p-3   gap-2 overflow-hidden'>
           <div className='flex justify-center items-center'>

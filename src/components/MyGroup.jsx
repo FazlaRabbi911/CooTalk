@@ -18,14 +18,51 @@ const MyGroup = () => {
 
     let [grpName,setgrpName]= useState('')
     const db = getDatabase();
-    let handleCreatGroup =()=>{
-        setmodalOpen(!Modalopen)
-        set(push(ref(db,'Groups' ), {
-            GroupName :grpName,
-            AdminName:Admin.displayName,
-            AdminUid:Admin.uid
-          }))
-    }
+    let handleCreatGroup = () => {
+      setmodalOpen(!Modalopen);
+  
+      // Create a new reference for 'Groups'
+      let groupRef = push(ref(db, 'Groups'));
+      let groupKey = groupRef.key; // Retrieve the unique key for 'Groups'
+  
+      // Save data in 'Groups'
+      set(groupRef, {
+          GroupName: grpName,
+          AdminName: Admin.displayName,
+          AdminUid: Admin.uid,
+      })
+          .then(() => {
+              // Create a new reference for 'GroupAndMembers'
+              let groupMemberRef = push(ref(db, 'GroupAndMembers'));
+              let groupMemberKey = groupMemberRef.key; // Retrieve the unique key for 'GroupAndMembers'
+  
+              // Save data in 'GroupAndMembers' with the key
+              return set(groupMemberRef, {
+                  GroupName: grpName,
+                  AdminName: Admin.displayName,
+                  Adminuid: Admin.uid,
+                  GroupAndMemberId: groupMemberKey, // Add the key to the data
+              });
+          })
+          .then(() => {
+              console.log("Group and GroupAndMembers created successfully.");
+          })
+          .catch((error) => {
+              console.error("Error while creating group:", error);
+          });
+  };
+  let [GroupAndMembers,setGroupAndMembers]= useState([])
+  useEffect(()=>{                          // group massage
+    const massagedata =  ref(db, 'GroupAndMembers');                      // problem is i can send grp sms in any group tho im not engaged 
+    onValue( massagedata, (snapshot) => {
+      let arry =[]
+      snapshot.forEach((item)=> {
+            arry.push({...item.val(),GroupMemberId:item.key})
+      })
+      setGroupAndMembers(arry)
+    });
+    // console.log(GroupAndMembers)
+  },[]) 
     let handleGrorupname=(e)=>{
         setgrpName(e.target.value)
     }
@@ -59,14 +96,39 @@ const MyGroup = () => {
           // console.log(arry[0])
       });
     },[])
-    let handleRequestAccept=(item)=>{
-      set(push(ref(db,'GroupAndMembers' )), {
-          ...item
-      }).then(()=>{
-        remove(ref(db,'GroupJoinRequest/'+item.GrpRequestKey))
-      })
-      setgrpmodalOpen(!GrpModalopen)
-    }
+    
+    let handleRequestAccept = (item) => {
+      // Check if a matching group member exists
+      const matchingMember = GroupAndMembers.find(
+          (grpmember) =>
+              grpmember.Adminuid === item.Adminuid && grpmember.GroupName === item.GroupName
+      );
+  
+      if (matchingMember) {
+          // Add the new group member
+          set(push(ref(db, 'GroupAndMembers')), {
+              WhoWantJoinUid: item.WhoWantJoinUid,
+              WhoWantJoinName: item.WhoWantJoinName,
+              GroupName: item.GroupName,
+              Adminuid: item.Adminuid,
+              AdminName: item.AdminName,
+              GroupAndMemberId: matchingMember.GroupMemberId, // Use the matching member's ID
+          })
+              .then(() => {
+                  // Remove the join request
+                  remove(ref(db, 'GroupJoinRequest/' + item.GrpRequestKey));
+                  console.log("Request accepted and join request removed.");
+              })
+              .catch((error) => {
+                  console.error("Error accepting request:", error);
+              });
+  
+          // Close the modal
+          setgrpmodalOpen(!GrpModalopen);
+      } else {
+          console.error("No matching group member found.");
+      }
+  };
     let handleRequestDelete=(item)=>{
       remove(ref(db,'GroupJoinRequest/'+item.GrpRequestKey))
       setgrpmodalOpen(!GrpModalopen)
