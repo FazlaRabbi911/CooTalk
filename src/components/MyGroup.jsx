@@ -103,7 +103,7 @@ const MyGroup = () => {
           (grpmember) =>
               grpmember.Adminuid === item.Adminuid && grpmember.GroupName === item.GroupName
       );
-  
+  // console.log(item.GroupId)
       if (matchingMember) {
           // Add the new group member
           set(push(ref(db, 'GroupAndMembers')), {
@@ -112,6 +112,7 @@ const MyGroup = () => {
               GroupName: item.GroupName,
               Adminuid: item.Adminuid,
               AdminName: item.AdminName,
+              GroupId :item.GroupId,
               GroupAndMemberId: matchingMember.GroupMemberId, // Use the matching member's ID
           })
               .then(() => {

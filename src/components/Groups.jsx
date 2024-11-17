@@ -38,7 +38,7 @@ const Groups = () => {
           let arry = []
           snapshot.forEach((item)=> 
           {if(item.val().WhoWantJoinUid == Admin.uid){
-            arry.push(item.val().GroupId + item.val().WhoWantJoinUid) }
+            arry.push(item.val().GroupId+ item.val().WhoWantJoinUid) }
           })
           setGroupMemberdata(arry)
         })
@@ -74,7 +74,7 @@ const Groups = () => {
                 :
                 GroupMemberdata.includes( item.grpkey + Admin.uid) 
                 ?
-                <button onClick={()=>handleGroupRequest(item)} className='bg-slate-500 shadow-2xl border-2 p-1.5  rounded-lg font-extralight'></button>
+                <button  className='bg-slate-500 shadow-2xl border-2 p-1.5  rounded-lg font-extralight'></button>
                 :
                 <button onClick={()=>handleGroupRequest(item)} className='bg-slate-400 p-1.5 border-[1.3px] rounded-lg font-extralight'>join</button>
 

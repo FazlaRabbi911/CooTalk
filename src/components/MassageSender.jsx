@@ -203,7 +203,7 @@ let handleactivemassage =(item)=>{
         const isSender = item.whosendGRP_MSG_Uid  == Admin.uid;
         return (
           <p 
-            className={isSender ? 'text-right ' : 'text-left ml-2'} 
+            className={isSender ? 'text-right ' : 'text-left ml-2 '} 
             key={`${item.whosendGRP_MSG_Uid}-${item.GroupAndMemberId}-${item.Massage }`}
           >
             <div>
@@ -227,7 +227,7 @@ let handleactivemassage =(item)=>{
 
     <div>
         <div >
-        <div className='my-[35px] '>{activesmguser  && showmassage  ?  showmassage.map(renderMessage) : groupdata && groupMsgData && groupMsgData.map(renderGroupMessage)}</div>
+        <div className='my-[35px] mb-12'>{activesmguser  && showmassage  ?  showmassage.map(renderMessage) : groupdata && groupMsgData && groupMsgData.map(renderGroupMessage)}</div>
         </div>
         <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-7 p-3   gap-2 overflow-hidden'>
           <div className='flex justify-center items-center'>

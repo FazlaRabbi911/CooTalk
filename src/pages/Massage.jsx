@@ -75,7 +75,6 @@ const Massage = () => {
       dispatch(activeMsguser())
       dispatch(groupdata12())
       dispatch(groupdata12(item))
-
   }
   
   return (
@@ -120,7 +119,7 @@ const Massage = () => {
                       </div>
             </div>
         </div>
-        <div ref={containerRef} className="bg-gradient-overlay mt-24   bg-contain	scrollbar	w-full h-[90%] bg-size  rounded-[10px] text-white overflow-y-scroll  ">
+        <div ref={containerRef} className="bg-gradient-overlay mt-24   bg-contain	scrollbar	 h-[90%] bg-size  rounded-[10px] text-white overflow-y-scroll  overflow-x-hidden">
             <MassageSender/>
         </div>
 
