@@ -108,7 +108,6 @@ const Massage = () => {
                       }
                       <div className= {`text-left ${!groupSlice && 'pl-28'} p-12  pr-12`}>
                           <h2 className='font-mono font-bold text-[20px] text-[#c9c2ff]'>
-                            
                             {groupSlice ?
                             groupSlice.GroupName 
                             : activesmguser?

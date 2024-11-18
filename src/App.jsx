@@ -1,9 +1,15 @@
 import './App.css'
+// import {
+//   createRoutesFromElements,
+//   createBrowserRouter,
+//   Route,
+//   RouterProvider,
+// } from "react-router-dom";
 import {
-  createRoutesFromElements,
   createBrowserRouter,
-  Route,
+  createRoutesFromElements,
   RouterProvider,
+  Route
 } from "react-router-dom";
 import Registration from './pages/Registration';
 import Login from './pages/Login';
@@ -27,9 +33,7 @@ function App() {
           <Route path='/Home/notification' element={<Notification/>}/>
           <Route path='/Home/setting' element={<Setting/>}/>
         </Route>
-
       </Route>
-
     )
   );
   return (

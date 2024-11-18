@@ -7,6 +7,10 @@ import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { PiShareFatFill } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
 import { FaSmile } from "react-icons/fa";
+import { FaFileArrowUp } from "react-icons/fa6";
+import { FcImageFile } from "react-icons/fc";
+import { FcVideoFile } from "react-icons/fc";
+
 
 
 import moment from 'moment'
@@ -138,7 +142,7 @@ let handleactivemassage =(item)=>{
       Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
     });
   }else{    
-    set(push(ref(db, 'Massages' )), {
+    set(push(ref(db, 'Massages' )), {           // massage
       massage_Sender_uid:Admin.uid,
       massage_Sender_Name:Admin.displayName,
 
@@ -153,7 +157,7 @@ let handleactivemassage =(item)=>{
 }
 
   useEffect(()=>{
-    const starCountRef = ref(db, 'GroupMassage' );
+    const starCountRef = ref(db, 'GroupMassage' );    // group massage
     onValue(starCountRef, (snapshot) => {
       let arry = []
         snapshot.forEach((item)=>{
@@ -174,6 +178,10 @@ let handleactivemassage =(item)=>{
   }else if(groupdata)
 
     setGroupMsg(GroupMsg+e.emoji)
+ }
+ let [fileopener,setfileopener] = useState(true)
+ let handleImage=(e)=>{
+  console.log(e.target.files)
  }
 
       const renderMessage = (item) => { // I divided this part, cause it was re-rendering 
@@ -215,7 +223,6 @@ let handleactivemassage =(item)=>{
                       isSender ? 'right-[-30px]' : 'left-[-30px]'
                     } text-6xl`}
                   />
-
                 </span>
                 {forwardshow && !isSender && <span onClick={()=>ForwardMassage(item)} className='rotate-0 inline-block text-xl cursor-pointer'><PiShareFatFill /></span>}
               </div>
@@ -231,7 +238,16 @@ let handleactivemassage =(item)=>{
         </div>
         <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-7 p-3   gap-2 overflow-hidden'>
           <div className='flex justify-center items-center'>
-              {/* <input   type="text" placeholder='text'/> */}
+            <div  className='w-[15%] relative ml-5 '>
+              <FaFileArrowUp onClick={()=>setfileopener(!fileopener)} className={`text-3xl cursor-pointer transition-all duration-500 ${fileopener ? 'h-0 opacity-0 ' : 'h-10 opacity-100 '}  `} />
+              {/* onClick={()=>setfileopener(!fileopener)} */}
+                  <div  className={`flex text-5xl pr-4  justify-between items-center mr-6 w-[100%] transition-all duration-500  ${!fileopener && 'w-[0%] opacity-0 h-0'}`}>
+                    <input onChange={(e)=>handleImage(e)} type="file" id='image' hidden />
+                    <label for='image'><mark><FcImageFile className='bg-gray-600 rounded-lg cursor-pointer'/></mark></label>
+                  <FcVideoFile  className='bg-gray-600 rounded-lg cursor-pointer'/>
+                  </div>
+
+            </div>
               <div className='w-[80%] relative'>
               <textarea  value={activesmguser ?  text : groupdata &&  GroupMsg } ref={textareaRef} onChange={(e)=>handleInputChange(e)}
                className='bg- pt-2 pl-6 text-xl font-mono pr-8 max-h-[240px] h-10 overflow-y-auto resize-none hover:resize w-[100%]  font-bold    bg-[#2d324d88] break-words rounded-3xl inputcustom-scrollbar ' id="autoGrowTextarea" rows="2" placeholder="Type here..."
@@ -256,6 +272,7 @@ let handleactivemassage =(item)=>{
                   </button>
               </div>  
               }
+
           </div>
               {sendEmoji &&  
                 <div className='flex justify-center h-[10%] py-3 '>
