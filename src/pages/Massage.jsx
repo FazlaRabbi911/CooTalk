@@ -118,7 +118,7 @@ const Massage = () => {
                       </div>
             </div>
         </div>
-        <div ref={containerRef} className="bg-gradient-overlay mt-24   bg-contain	scrollbar	 h-[90%] bg-size  rounded-[10px] text-white overflow-y-scroll  overflow-x-hidden">
+        <div ref={containerRef} className="bg-gradient-overlay mt-24   bg-contain	scrollbar	 h-[90%] bg-size  rounded-[10px] text-white overflow-y-scroll  w-full">
             <MassageSender/>
         </div>
 

@@ -10,13 +10,17 @@ import { FaSmile } from "react-icons/fa";
 import { FaFileArrowUp } from "react-icons/fa6";
 import { FcImageFile } from "react-icons/fc";
 import { FcVideoFile } from "react-icons/fc";
-
+import { getStorage, uploadBytes ,ref as imgRef, getDownloadURL} from "firebase/storage";
+import { IoMdMic } from "react-icons/io";
+import { RiFileVideoFill } from "react-icons/ri";
+import { RiFolderSettingsFill } from "react-icons/ri";
 
 
 import moment from 'moment'
 import EmojiPicker from 'emoji-picker-react';
 const MassageSender = () => {
   const db = getDatabase();
+  const storage = getStorage();
   let Admin = useSelector((state)=>state.storeuser.value)
 
   let activesmguser = useSelector((state)=>state.storactiveMsg.value)   //onclick massage slice
@@ -180,18 +184,102 @@ let handleactivemassage =(item)=>{
     setGroupMsg(GroupMsg+e.emoji)
  }
  let [fileopener,setfileopener] = useState(true)
+
  let handleImage=(e)=>{
-  console.log(e.target.files)
+  console.log('click')
+  const storageRef = imgRef(storage, e.target.files[0].name);
+  uploadBytes(storageRef, e.target.files[0]).then((snapshot) => {
+    getDownloadURL(storageRef).then((DownloadURL) => {
+    console.log(DownloadURL)
+    if(activesmguser){
+      set(push(ref(db, 'Massages' )), {
+        massage_Sender_uid:Admin.uid,
+        massage_Sender_Name:Admin.displayName,
+  
+        Massage_Reciver_uid:activesmguser.activeuseUid,
+        Massage_Reciver_Name:activesmguser.activeUseName,
+        ImgMassage:DownloadURL,
+        Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
+      }).then(()=>{
+        setText('');
+        SetsendEmoji(false)
+        settaxtarheight('40px')
+        setmsgData('')
+        setfileopener(!fileopener)
+      })
+    }else if(groupdata){
+      set(push(ref(db, 'GroupMassage' )), {
+        whosendGRP_MSG_Uid:Admin.uid,
+        whosendGRP_MSG_Name:Admin.displayName,
+  
+        GroupAndMemberId:groupdata.GroupAndMemberId,
+        GroupName_Name:groupdata.GroupName,
+        ImgMassage:DownloadURL,
+        Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
+      }).then(()=>{
+        SetsendEmoji(false)
+        settaxtarheight('40px')
+        setGroupMsg('')
+        SetsendEmoji(false)
+        setfileopener(!fileopener)
+      })
+    }
+  })
+  });
+ }
+
+ let handleVideo=(e)=>{
+  const storageRef = imgRef(storage, e.target.files[0].name);
+  uploadBytes(storageRef, e.target.files[0]).then((snapshot) => {
+    getDownloadURL(storageRef).then((DownloadURL) => {
+    console.log(DownloadURL)
+    if(activesmguser){
+      set(push(ref(db, 'Massages' )), {
+        massage_Sender_uid:Admin.uid,
+        massage_Sender_Name:Admin.displayName,
+  
+        Massage_Reciver_uid:activesmguser.activeuseUid,
+        Massage_Reciver_Name:activesmguser.activeUseName,
+        Video:DownloadURL,
+        Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
+      }).then(()=>{
+        setText('');
+        SetsendEmoji(false)
+        settaxtarheight('40px')
+        setmsgData('')
+        setfileopener(!fileopener)
+
+      })
+    }else if(groupdata){
+      set(push(ref(db, 'GroupMassage' )), {
+        whosendGRP_MSG_Uid:Admin.uid,
+        whosendGRP_MSG_Name:Admin.displayName,
+  
+        GroupAndMemberId:groupdata.GroupAndMemberId,
+        GroupName_Name:groupdata.GroupName,
+        Video:DownloadURL,
+        Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
+      }).then(()=>{
+        SetsendEmoji(false)
+        settaxtarheight('40px')
+        setGroupMsg('')
+        SetsendEmoji(false)
+        setfileopener(!fileopener)
+
+      })
+    }
+  })
+  });
  }
 
       const renderMessage = (item) => { // I divided this part, cause it was re-rendering 
         const isSender = item.massage_Sender_uid === Admin.uid;
         return (
           <p 
-            className={isSender ? 'text-right ' : 'text-left ml-2'} 
-            key={`${item.massage_Sender_uid}-${item.Massage_Reciver_uid}-${item.Massage}`}
+            className={isSender ? 'text-right' : 'text-left ml-2'} 
+            key={`${item.massage_Sender_uid}-${item.Massage_Reciver_uid}-${item.Massage}-${item.ImgMassage}`}
           >
-            <div>
+            <div className='w-full'>
               {forwardshow && isSender && <span><PiShareFatFill onClick={()=>ForwardMassage(item)} className={isSender && ' transform scale-x-[-1] mr-3 inline-block text-xl cursor-pointer' }/></span>}
               <span onClick={handleforwardSwitch} className="text-xl font-mono bg-[#293061] m-5 p-4 rounded-xl inline-block relative">
                   {item.Massage}
@@ -201,7 +289,13 @@ let handleactivemassage =(item)=>{
                     } text-6xl`}
                   />
                 </span>
+                {item.ImgMassage && <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-auto '} ><img className='rounded-sm object-fill mb-4 ' src={item.ImgMassage} alt="" /></div>}
+                {item.Video &&
+                <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-auto '} >
+                    <video src={item.Video} controls ></video>
+                  </div>}
                 {forwardshow && !isSender && <span onClick={()=>ForwardMassage(item)} className='rotate-0 inline-block text-xl cursor-pointer'><PiShareFatFill /></span>}
+
               </div>
             <p className='text-[#8f8e8e79] font-mono text-[15px] mt-[-10px]'>{moment(item.Time, 'YYYYMMDD h:mm:ss ').fromNow()}</p>
           </p>
@@ -212,7 +306,7 @@ let handleactivemassage =(item)=>{
         return (
           <p 
             className={isSender ? 'text-right ' : 'text-left ml-2 '} 
-            key={`${item.whosendGRP_MSG_Uid}-${item.GroupAndMemberId}-${item.Massage }`}
+            key={`${item.whosendGRP_MSG_Uid}-${item.GroupAndMemberId}-${item.Massage }-${item.ImgMassage}`}
           >
             <div>
               {forwardshow && isSender && <span><PiShareFatFill onClick={()=>ForwardMassage(item)} className={isSender && ' transform scale-x-[-1] mr-3 inline-block text-xl cursor-pointer' }/></span>}
@@ -224,6 +318,11 @@ let handleactivemassage =(item)=>{
                     } text-6xl`}
                   />
                 </span>
+                {item.ImgMassage && <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-auto '} ><img className='rounded-sm object-fill mb-4 ' src={item.ImgMassage} alt="" /></div>}
+                {item.Video &&
+                <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-auto '} >
+                    <video src={item.Video} controls ></video>
+                </div>}
                 {forwardshow && !isSender && <span onClick={()=>ForwardMassage(item)} className='rotate-0 inline-block text-xl cursor-pointer'><PiShareFatFill /></span>}
               </div>
             <p className='text-[#8f8e8e79] font-mono text-[15px] mt-[-10px]'>{moment(item.Time, 'YYYYMMDD h:mm:ss ').fromNow()}</p>
@@ -237,18 +336,29 @@ let handleactivemassage =(item)=>{
         <div className='my-[35px] mb-12'>{activesmguser  && showmassage  ?  showmassage.map(renderMessage) : groupdata && groupMsgData && groupMsgData.map(renderGroupMessage)}</div>
         </div>
         <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-7 p-3   gap-2 overflow-hidden'>
-          <div className='flex justify-center items-center'>
-            <div  className='w-[15%] relative ml-5 '>
-              <FaFileArrowUp onClick={()=>setfileopener(!fileopener)} className={`text-3xl cursor-pointer transition-all duration-500 ${fileopener ? 'h-0 opacity-0 ' : 'h-10 opacity-100 '}  `} />
-              {/* onClick={()=>setfileopener(!fileopener)} */}
-                  <div  className={`flex text-5xl pr-4  justify-between items-center mr-6 w-[100%] transition-all duration-500  ${!fileopener && 'w-[0%] opacity-0 h-0'}`}>
-                    <input onChange={(e)=>handleImage(e)} type="file" id='image' hidden />
-                    <label for='image'><mark><FcImageFile className='bg-gray-600 rounded-lg cursor-pointer'/></mark></label>
-                  <FcVideoFile  className='bg-gray-600 rounded-lg cursor-pointer'/>
-                  </div>
+          <div className='flex justify-center items-center '>
 
+          {fileopener &&
+                <button  onClick={()=>setfileopener(!fileopener)}  className={`text-4xl cursor-pointer text-right transition-all duration-500   ${fileopener ? 'w-10 opacity-100 ' : 'w-0 opacity-0 '}`}>x</button>
+              }
+            <div  className={` relative flex  text-[40px] mr-5 gap-4 transition-all duration-800 ${fileopener ? 'h-10 w-[20%]' : 'h-0'} `} >
+              <RiFolderSettingsFill onClick={()=>setfileopener(!fileopener)} className={` cursor-pointer mt-[-25px] transition-all duration-500 ${fileopener ? 'h-0 opacity-0 ' : 'h-10 opacity-100 text-3xl '}  `} />
+
+                    <div className='hover:bg-gray-800  hover:rounded-xl'>
+                      <input onChange={(e)=>handleImage(e)} type="file" id='image' hidden />
+                      <label for='image'><mark><FcImageFile className={`'cursor-pointer transition-all duration-6000 w-0 ${fileopener &&'rounded-lg w-10'} '`}/></mark></label>
+                    </div>
+                    <div className='hover:bg-gray-800  hover:rounded-xl'>
+                      <input onChange={(e)=>handleVideo(e)} type="file" id='video' hidden />
+                      <label for='video'><mark><RiFileVideoFill  className={`'bg-gray-800 text-[#e3bf7f] cursor-pointer transition-all duration-1500 w-0 ${fileopener &&'rounded-lg w-10'} '`}/></mark></label>
+                    </div>
+                    <div className='hover:bg-gray-800  hover:rounded-xl'>
+                      <input onChange={(e)=>handleVideo(e)} type="file" id='video' hidden />
+                      <label for='video'><mark><IoMdMic  className={`' text-white cursor-pointer transition-all duration-1500 w-0 ${fileopener &&'rounded-lg w-10'} '`}/></mark></label>
+                    </div>
             </div>
-              <div className='w-[80%] relative'>
+
+              <div className={` relative duration-800  ${fileopener ? 'w-[70%] ' : 'w-[80%]'} `}>
               <textarea  value={activesmguser ?  text : groupdata &&  GroupMsg } ref={textareaRef} onChange={(e)=>handleInputChange(e)}
                className='bg- pt-2 pl-6 text-xl font-mono pr-8 max-h-[240px] h-10 overflow-y-auto resize-none hover:resize w-[100%]  font-bold    bg-[#2d324d88] break-words rounded-3xl inputcustom-scrollbar ' id="autoGrowTextarea" rows="2" placeholder="Type here..."
                ></textarea><FaSmile onClick={()=>SetsendEmoji(!sendEmoji)} className={`absolute right-2 text-2xl top-[16%] text-gray-300 cursor-pointer ${sendEmoji && 'text-green-400'}`} />
