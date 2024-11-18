@@ -9,7 +9,7 @@ import { InfinitySpin } from 'react-loader-spinner';
 import { IoMdEye } from "react-icons/io";
 import { RiEyeCloseFill } from "react-icons/ri";
 import { getDatabase,ref, set } from "firebase/database";
-import logo from "./src/assets/logo.jpg"
+import logo from "../../src/assets/logo.jpg"
 
 const Registration = () => {
     const auth = getAuth();
