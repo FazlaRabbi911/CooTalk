@@ -9,7 +9,7 @@ import { InfinitySpin } from 'react-loader-spinner';
 import { IoMdEye } from "react-icons/io";
 import { RiEyeCloseFill } from "react-icons/ri";
 import { getDatabase,ref, set } from "firebase/database";
-
+import logo from "./src/assets/logo.jpg"
 
 const Registration = () => {
     const auth = getAuth();
@@ -91,7 +91,7 @@ const Registration = () => {
     <div className='bg-dark h-screen relative'>
         <div className=' absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-2/4' >
             <div className='text-center flex flex-col justify-center items-center'>
-                <img className='w-20 m-0 p-0 rounded-[25%]  bg-black ' src="./src/assets/logo.jpg" alt="#" />
+                <img className='w-20 m-0 p-0 rounded-[25%]  bg-black ' src={logo} alt="#" />
                 <h1 className='text-white text-2xl	pt-8 pb-5'>Sign up to CooTalk</h1> 
             </div>
             <div className='bg-glass border-[.20px] border-[#ffffff22] overflow-hidden pt-5 pb-4 pr-4 pl-4 rounded-md '>
