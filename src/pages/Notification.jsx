@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getDatabase, onValue, push, ref, remove, set } from "firebase/database";
 import { useSelector } from "react-redux";
 import { FaRotateLeft } from "react-icons/fa6";
-
+import moment from 'moment'
 
 const Notification = () => {
   const [notedata, setnotedata] = useState([]); // Stores fetched notes data
@@ -108,13 +108,15 @@ const handleDeleteNote = (itemKey) => {
               <div
                 onClick={() => toggleRotate(item.itemkey) }
 
-                className={`absolute inset-0 flex flex-col items-center justify-center transform backface-hidden bg-[#21273d] p-20 rounded-2xl shadow-lg ${
+                className={`absolute inset-0 flex flex-col items-center gap-44 justify-center transform backface-hidden bg-[#21273d] p-20 rounded-2xl shadow-lg ${
                   zoomedCardId === item.itemkey ? "hidden" : ""
                 }`}
               >
-                <h3 className="text-4xl font-bold uppercase font-roboto text-white mt-5">
+                <h3 className="text-4xl font-bold uppercase font-roboto text-white mt-5 py-2 break-words ">
                   {item.NoteKey ==item.itemkey && item.nodeheading ?item.nodeheading:"Add Note"}
                 </h3>
+                <p className="text-gray-400 font-mono ">{item.NoteKey ==item.itemkey && item.nodeheading ?moment(item.Time, 'YYYYMMDD h:mm:ss ').fromNow():""}</p>
+
               </div>
   
               {/* Back Side */}
