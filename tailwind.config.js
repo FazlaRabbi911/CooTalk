@@ -21,7 +21,8 @@ export default {
       },
       backgroundImageForchat: {
         'chatbg': "url('/src/assets/chatimg.png')",
-      }
+      },
+
     },
   },
   plugins: [],

@@ -83,6 +83,12 @@
     .rotate-y-180 {
       transform: rotateY(180deg);
     }
+    .translate-z-50 {
+      transform: translateZ(50px);
+    }
+    .transform-roatey {
+      transform: rotateY(.5turn);
+    }
   }
 
   
