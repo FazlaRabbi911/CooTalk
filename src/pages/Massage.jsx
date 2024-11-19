@@ -8,12 +8,14 @@ import { getDatabase, onValue, ref } from 'firebase/database'
 import { activeMsguser } from '../activeMsgSlice'
 import { groupdata12 } from '../groupSlice'
 import { FaLayerGroup } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom'
 
 
 const Massage = () => {
   const db = getDatabase();
   const containerRef = useRef(null);
   let dispatch = useDispatch()
+  let Navigate =     useNavigate()
   let [Joinedgroup,setJoinedgroup] = useState([])
 
   let Admin = useSelector((state)=>state.storeuser.value)
@@ -118,7 +120,7 @@ const Massage = () => {
                       </div>
             </div>
         </div>
-        <div ref={containerRef} className="bg-gradient-overlay mt-24   bg-contain	scrollbar	 h-[90%] bg-size  rounded-[10px] text-white overflow-y-scroll  w-full">
+        <div ref={containerRef} className="bg-gradient-overlay mt-24   bg-contain	scrollbar	 h-[90%] bg-size  rounded-[10px] text-white overflow-y-scroll  w-full overflow-x-hidden">
             <MassageSender/>
         </div>
 
