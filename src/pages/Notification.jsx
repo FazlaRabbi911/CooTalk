@@ -44,7 +44,7 @@ const Notification = () => {
       Time: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
     });
   };
-  
+
 
   const toggleRotate = (id) => {
     setRotationState((prev) => ({
@@ -54,6 +54,8 @@ const Notification = () => {
   };
 
   const handlecreatNote = () => {
+    setnodeheading("");
+    setnodeContent("");
     // Create a new note in Firebase
     const Note = push(ref(db, "Notes"));
     const noteKey = Note.key;
@@ -62,7 +64,7 @@ const Notification = () => {
       NoteKey: noteKey,
     });
   };
-  const handleHeadingChange = (e) => setnodeheading(e.target.value);
+  const handleHeadingChange = (e) =>  {setnodeheading(e.target.value) ,console.log(e.target.value,nodeContent)};
 const handleContentChange = (e) => setnodeContent(e.target.value);
 
 const handleDeleteNote = (itemKey) => {
@@ -112,7 +114,7 @@ const handleDeleteNote = (itemKey) => {
                   zoomedCardId === item.itemkey ? "hidden" : ""
                 }`}
               >
-                <h3 className="text-4xl font-bold uppercase font-roboto text-white mt-5 py-2 break-words ">
+                <h3 className="text-4xl font-bold uppercase font-roboto text-white  py-2 break-words ">
                   {item.NoteKey ==item.itemkey && item.nodeheading ?item.nodeheading:"Add Note"}
                 </h3>
                 <p className="text-gray-400 font-mono ">{item.NoteKey ==item.itemkey && item.nodeheading ?moment(item.Time, 'YYYYMMDD h:mm:ss ').fromNow():""}</p>
