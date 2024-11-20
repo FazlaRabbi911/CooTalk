@@ -106,7 +106,7 @@ const handleDeleteNote = (itemKey) => {
               {/* Front Side */}
                 <div  
                     onClick={() => toggleRotate(item.itemkey)}
-                    className={`absolute inset-0 h-full w-full flex flex-col justify-between transform backface-hidden bg-[#21273d] p-20 rounded-2xl shadow-lg ${
+                    className={` absolute inset-0 h-full w-full flex flex-col justify-between transform backface-hidden bg-[#21273d] p-20 rounded-2xl shadow-lg ${
                       zoomedCardId === item.itemkey ? "hidden" : ""
                     }`}
                     style={{
@@ -199,7 +199,9 @@ const handleDeleteNote = (itemKey) => {
                 </div>
 
               </div>
+
             </div>
+            
           </div>
         ))}
       </div>
