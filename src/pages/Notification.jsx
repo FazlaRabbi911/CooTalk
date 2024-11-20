@@ -96,24 +96,29 @@ const handleDeleteNote = (itemKey) => {
             }`}
             > 
             <div  
-                 style={{
-                  userSelect: "none", // Disable text selection on double-click
+                style={{
+                  userSelect: "none", // Disable text selection
                 }}
-              className={`relative h-full w-full transition-transform duration-1000 transform-style-preserve-3d ${
-                rotationState[item.itemkey] ? "rotate-y-180" : ""
-              }`}
+                className={`relative h-full w-full transition-transform duration-1000 transform-style-preserve-3d ${
+                  rotationState[item.itemkey] ? "rotate-y-180" : ""
+                }`}
             >
               {/* Front Side */}
-              <div  
-                      onClick={() => toggleRotate(item.itemkey)}
-                      className={`absolute inset-0  h-full w-full flex flex-col justify-between transform backface-hidden bg-[#21273d] p-20 rounded-2xl shadow-lg ${
-                        zoomedCardId === item.itemkey ? "hidden" : ""
-                      }`}
+                <div  
+                    onClick={() => toggleRotate(item.itemkey)}
+                    className={`absolute inset-0 h-full w-full flex flex-col justify-between transform backface-hidden bg-[#21273d] p-20 rounded-2xl shadow-lg ${
+                      zoomedCardId === item.itemkey ? "hidden" : ""
+                    }`}
+                    style={{
+                      transform: 'translateZ(150px)',
+                      transformStyle: 'preserve-3d',
+                    }}
                     >
                       <div>
                       <h3
                         className="text-2xl font-bold uppercase font-roboto text-white py-2 break-words overflow-hidden text-center"
                         style={{
+                          transform: 'translateZ(150px)',
                           wordBreak: "break-word", // Ensure long words wrap
                           maxWidth: "90%",         // Constrain width within the parent
                           whiteSpace: "normal",    // Allow wrapping for multiline text
@@ -146,13 +151,18 @@ const handleDeleteNote = (itemKey) => {
               </div>
   
               {/* Back Side */}
-              <div                 onDoubleClick={(e) => {
-                  e.preventDefault(); // Prevent default behavior (text selection)
-                  handleZoomIn(item.itemkey);
-                }}  
-                className={`absolute  inset-0 flex flex-col items-center justify-center transform rotate-y-180 bg-[#18344a] rounded-2xl shadow-lg backface-hidden ${
-                  zoomedCardId === item.itemkey ? "" : "cursor-pointer"
-                }`}
+              <div                
+                  onDoubleClick={(e) => {
+                    e.preventDefault();
+                    handleZoomIn(item.itemkey);
+                  }}
+                  className={`absolute inset-0 flex flex-col items-center justify-center transform rotate-y-180 bg-[#18344a] rounded-2xl shadow-lg backface-hidden ${
+                    zoomedCardId === item.itemkey ? "" : "cursor-pointer"
+                  }`}
+                  style={{
+                    transform: 'translateZ(50px) rotateY(180deg)', // Combine all transforms here
+                    transformStyle: 'preserve-3d',
+                  }}
               >  
                 <button
                   className="absolute group top-0 right-0 px-4 py-2 border-2 border-white rounded-full bg-transparent text-white hover:bg-white hover:text-[#45a1e8] transition"
@@ -174,7 +184,7 @@ const handleDeleteNote = (itemKey) => {
                 >
                    {zoomedCardId === item.itemkey ? "Add" :<FaRotateLeft  className="group-hover:rotate-[-145deg] transition duration-300"/>}
                 </button>
-                {zoomedCardId === item.itemkey && <button onClick={()=>setZoomedCardId(null)}  className="absolute top-0 left-24 px-4 py-2 border-2 border-white rounded-full bg-transparent text-white  hover:bg-red-500 hover:text-white transition">cancel</button>}
+                {zoomedCardId === item.itemkey && <button onClick={()=>{setZoomedCardId(null),toggleRotate(item.itemkey)}}  className="absolute top-0 left-24 px-4 py-2 border-2 border-white rounded-full bg-transparent text-white  hover:bg-red-500 hover:text-white transition">cancel</button>}
                 <div className="h-[60%] text-center text-white w-full" >
                 <textarea
                 onChange={handleHeadingChange} placeholder="add heading"
