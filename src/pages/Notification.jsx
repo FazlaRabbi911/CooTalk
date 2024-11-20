@@ -39,7 +39,7 @@ const Notification = () => {
     set(ref(db, `Notes/${itemKey}`), {
       Adminuid: user.uid,
       NoteKey: itemKey,
-      nodeheading: nodeheading || "Default Heading", // Use default if empty
+      nodeheading: nodeheading || "Add", // Use default if empty
       nodeContent: nodeContent || "Default Content", // Use default if empty
       Time: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
     });
@@ -96,10 +96,7 @@ const handleDeleteNote = (itemKey) => {
             }`}
             > 
             <div  
-                onDoubleClick={(e) => {
-                  e.preventDefault(); // Prevent default behavior (text selection)
-                  handleZoomIn(item.itemkey);
-                }}   style={{
+                 style={{
                   userSelect: "none", // Disable text selection on double-click
                 }}
               className={`relative h-full w-full transition-transform duration-1000 transform-style-preserve-3d ${
@@ -107,22 +104,52 @@ const handleDeleteNote = (itemKey) => {
               }`}
             >
               {/* Front Side */}
-              <div
-                onClick={() => toggleRotate(item.itemkey) }
-
-                className={`absolute inset-0 flex flex-col items-center gap-44 justify-center transform backface-hidden bg-[#21273d] p-20 rounded-2xl shadow-lg ${
-                  zoomedCardId === item.itemkey ? "hidden" : ""
-                }`}
-              >
-                <h3 className="text-4xl font-bold uppercase font-roboto text-white  py-2 break-words ">
-                  {item.NoteKey ==item.itemkey && item.nodeheading ?item.nodeheading:"Add Note"}
-                </h3>
-                <p className="text-gray-400 font-mono ">{item.NoteKey ==item.itemkey && item.nodeheading ?moment(item.Time, 'YYYYMMDD h:mm:ss ').fromNow():""}</p>
-
+              <div  
+                      onClick={() => toggleRotate(item.itemkey)}
+                      className={`absolute inset-0  h-full w-full flex flex-col justify-between transform backface-hidden bg-[#21273d] p-20 rounded-2xl shadow-lg ${
+                        zoomedCardId === item.itemkey ? "hidden" : ""
+                      }`}
+                    >
+                      <div>
+                      <h3
+                        className="text-2xl font-bold uppercase font-roboto text-white py-2 break-words overflow-hidden text-center"
+                        style={{
+                          wordBreak: "break-word", // Ensure long words wrap
+                          maxWidth: "90%",         // Constrain width within the parent
+                          whiteSpace: "normal",    // Allow wrapping for multiline text
+                          maxHeight: "4.5em",      // Limit to 3 lines of text
+                          display: "-webkit-box",  // Required for line-clamp
+                          WebkitLineClamp: 3,      // Show up to 3 lines
+                          WebkitBoxOrient: "vertical", // Required for line-clamp
+                          overflow: "hidden",      // Hide overflow with ellipsis
+                          textOverflow: "ellipsis",// Add ellipsis for clipped text
+                        }}
+                      >
+                        {item.NoteKey === item.itemkey && item.nodeheading
+                          ? item.nodeheading
+                          : "Add Note"}
+                      </h3>
+                    </div>
+                    <div>
+                    <p
+                        className="text-gray-400 font-mono text-center text-ellipsis overflow-hidden"
+                        style={{marginTop:'50px',
+                          wordBreak: "break-word", // Ensure long text breaks gracefully
+                          maxWidth: "90%",         // Constrain the width of the text
+                        }}
+                      >
+                        {item.NoteKey === item.itemkey && item.nodeheading
+                          ? moment(item.Time, "YYYYMMDD h:mm:ss ").fromNow()
+                          : ""}
+                      </p>
+                    </div>
               </div>
   
               {/* Back Side */}
-              <div 
+              <div                 onDoubleClick={(e) => {
+                  e.preventDefault(); // Prevent default behavior (text selection)
+                  handleZoomIn(item.itemkey);
+                }}  
                 className={`absolute  inset-0 flex flex-col items-center justify-center transform rotate-y-180 bg-[#18344a] rounded-2xl shadow-lg backface-hidden ${
                   zoomedCardId === item.itemkey ? "" : "cursor-pointer"
                 }`}
@@ -148,11 +175,11 @@ const handleDeleteNote = (itemKey) => {
                    {zoomedCardId === item.itemkey ? "Add" :<FaRotateLeft  className="group-hover:rotate-[-145deg] transition duration-300"/>}
                 </button>
                 {zoomedCardId === item.itemkey && <button onClick={()=>setZoomedCardId(null)}  className="absolute top-0 left-24 px-4 py-2 border-2 border-white rounded-full bg-transparent text-white  hover:bg-red-500 hover:text-white transition">cancel</button>}
-                <div className="h-[60%] text-center text-white w-full">
+                <div className="h-[60%] text-center text-white w-full" >
                 <textarea
-                onChange={handleHeadingChange}
+                onChange={handleHeadingChange} placeholder="add heading"
                 value={zoomedCardId === item.itemkey ? item.notedata : item.nodeheading || ""}
-                className="h-10 font-bold text-xl bg-transparent outline-none border-none text-center"   maxLength={10}
+                className="h-10 font-bold text-xl bg-transparent outline-none border-none text-center"   maxLength={25}
                 />
                 <textarea
                   onChange={handleContentChange}
