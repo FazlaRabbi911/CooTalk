@@ -183,7 +183,7 @@ let handleactivemassage =(item)=>{
 
     setGroupMsg(GroupMsg+e.emoji)
  }
- let [fileopener,setfileopener] = useState(true)
+ let [fileopener,setfileopener] = useState(false)
 
  let handleImage=(e)=>{
   console.log('click')
