@@ -279,9 +279,9 @@ let handleactivemassage =(item)=>{
             className={isSender ? 'text-right' : 'text-left ml-2'} 
             key={`${item.massage_Sender_uid}-${item.Massage_Reciver_uid}-${item.Massage}-${item.ImgMassage}`}
           >
-            <div className='w-full'>
+            <div className='w-full '>
               {forwardshow && isSender && <span><PiShareFatFill onClick={()=>ForwardMassage(item)} className={isSender && ' transform scale-x-[-1] mr-3 inline-block text-xl cursor-pointer' }/></span>}
-              <span onClick={handleforwardSwitch} className="text-xl font-mono bg-[#293061] m-5 p-4 rounded-xl inline-block relative">
+              <span onClick={handleforwardSwitch} className="text-xl font-mono bg-[#293061] m-5 p-4 rounded-xl inline-block relative text-wrap">
                   {item.Massage}
                   <TiArrowSortedUp
                     className={`text-[#293061] rotate-60 absolute top-[-9px] ${
