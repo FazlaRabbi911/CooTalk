@@ -15,6 +15,8 @@ import { IoMdMic } from "react-icons/io";
 import { RiFileVideoFill } from "react-icons/ri";
 import { RiFolderSettingsFill } from "react-icons/ri";
 
+import { AudioRecorder } from 'react-audio-voice-recorder';
+
 
 import moment from 'moment'
 import EmojiPicker from 'emoji-picker-react';
@@ -127,7 +129,7 @@ let handleforwardSwitch=()=>{
     },[])
 
 let [forwardmassageModal,setforwardmassageModal] = useState(false)
-let [forwardMassage,setforwardMassage] =useState()
+let [forwardMassage,setforwardMassage] = useState()
 let ForwardMassage=(item)=>{
   setforwardMassage(item)
   setforwardmassageModal(!forwardmassageModal)
@@ -184,6 +186,7 @@ let handleactivemassage =(item)=>{
     setGroupMsg(GroupMsg+e.emoji)
  }
  let [fileopener,setfileopener] = useState(false)
+ let [audioopener,setaudioopener] = useState(false)
 
  let handleImage=(e)=>{
   console.log('click')
@@ -272,14 +275,41 @@ let handleactivemassage =(item)=>{
   });
  }
 
+
+      const addAudioElement = (blob) => {
+
+        let audioUrl = (URL.createObjectURL(blob))
+
+        if(activesmguser){
+          set(push(ref(db, 'Massages' )), {
+            massage_Sender_uid:Admin.uid,
+            massage_Sender_Name:Admin.displayName,
+      
+            Massage_Reciver_uid:activesmguser.activeuseUid,
+            Massage_Reciver_Name:activesmguser.activeUseName,
+            audio:audioUrl,
+            Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
+          })
+        }else if(groupdata){
+          set(push(ref(db, 'GroupMassage' )), {
+            whosendGRP_MSG_Uid:Admin.uid,
+            whosendGRP_MSG_Name:Admin.displayName,
+      
+            GroupAndMemberId:groupdata.GroupAndMemberId,
+            GroupName_Name:groupdata.GroupName,
+            audio:audioUrl,
+            Time:`${ new Date().getFullYear()}/${new Date().getMonth()+1}/${new Date().getDate()}/${new Date().getHours()}/${new Date().getMinutes()}}`
+          })
+        }
+      };
       const renderMessage = (item) => { // I divided this part, cause it was re-rendering 
         const isSender = item.massage_Sender_uid === Admin.uid;
         return (
           <p 
-            className={isSender ? 'text-right' : 'text-left ml-2'} 
+            className={isSender ? 'text-right ' : 'text-left ml-2'} 
             key={`${item.massage_Sender_uid}-${item.Massage_Reciver_uid}-${item.Massage}-${item.ImgMassage}`}
           >
-            <div className='w-full '>
+            <div className='w-full ml-0 '>
               {forwardshow && isSender && <span><PiShareFatFill onClick={()=>ForwardMassage(item)} className={isSender && ' transform scale-x-[-1] mr-3 inline-block text-xl cursor-pointer' }/></span>}
               <span onClick={handleforwardSwitch} className="text-xl font-mono bg-[#293061] m-5 p-4 rounded-xl inline-block relative text-wrap">
                   {item.Massage}
@@ -289,13 +319,13 @@ let handleactivemassage =(item)=>{
                     } text-6xl`}
                   />
                 </span>
-                {item.ImgMassage && <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-auto '} ><img className='rounded-sm object-fill mb-4 ' src={item.ImgMassage} alt="" /></div>}
+                {item.ImgMassage && <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-0 '} ><img className='rounded-sm object-fill mb-4 ' src={item.ImgMassage} alt="" /></div>}
                 {item.Video &&
-                <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-auto '} >
+                <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-0 '} >
                     <video src={item.Video} controls ></video>
                   </div>}
+                {item.audio && <audio src={item.audio} className={`mb-6 ${isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-0 '}`} controls></audio>}
                 {forwardshow && !isSender && <span onClick={()=>ForwardMassage(item)} className='rotate-0 inline-block text-xl cursor-pointer'><PiShareFatFill /></span>}
-
               </div>
             <p className='text-[#8f8e8e79] font-mono text-[15px] mt-[-10px]'>{moment(item.Time, 'YYYYMMDD h:mm:ss ').fromNow()}</p>
           </p>
@@ -303,6 +333,7 @@ let handleactivemassage =(item)=>{
       };
       const renderGroupMessage = (item) => { // I divided this part, cause it was re-rendering 
         const isSender = item.whosendGRP_MSG_Uid  == Admin.uid;
+        console.log(item )
         return (
           <p 
             className={isSender ? 'text-right ' : 'text-left ml-2 '} 
@@ -318,11 +349,14 @@ let handleactivemassage =(item)=>{
                     } text-6xl`}
                   />
                 </span>
-                {item.ImgMassage && <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-auto '} ><img className='rounded-sm object-fill mb-4 ' src={item.ImgMassage} alt="" /></div>}
-                {item.Video &&
-                <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-auto '} >
-                    <video src={item.Video} controls ></video>
-                </div>}
+                <div className={isSender ? ' flex justify-end ' : ' flex justify-end '}>
+                  {item.ImgMassage && <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] flex justify-end ml-auto ' : 'ml-0 w-[40%] flex justify-end '} ><img className='rounded-sm object-fill mb-4 ' src={item.ImgMassage} alt="" /></div>}
+                  {item.Video &&
+                  <div onClick={handleforwardSwitch} className={isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-0 '} >
+                      <video src={item.Video} controls ></video>
+                  </div>}
+                </div>
+                {item.audio && <audio src={item.audio} className={`mb-6 ${isSender ? 'w-[40%] ml-auto ' : 'w-[40%] ml-0 '}`} controls></audio>}
                 {forwardshow && !isSender && <span onClick={()=>ForwardMassage(item)} className='rotate-0 inline-block text-xl cursor-pointer'><PiShareFatFill /></span>}
               </div>
             <p className='text-[#8f8e8e79] font-mono text-[15px] mt-[-10px]'>{moment(item.Time, 'YYYYMMDD h:mm:ss ').fromNow()}</p>
@@ -333,7 +367,7 @@ let handleactivemassage =(item)=>{
 
     <div>
         <div >
-        <div className='my-[35px] mb-12'>{activesmguser  && showmassage  ?  showmassage.map(renderMessage) : groupdata && groupMsgData && groupMsgData.map(renderGroupMessage)}</div>
+        <div className='my-[35px] mb-12  '>{activesmguser  && showmassage  ?  showmassage.map(renderMessage) : groupdata && groupMsgData && groupMsgData.map(renderGroupMessage)}</div>
         </div>
         <div className=' bg-black w-full absolute left-0 bottom-[-72px] py-7 p-3   gap-2 overflow-hidden'>
           <div className='flex justify-center items-center '>
@@ -341,9 +375,21 @@ let handleactivemassage =(item)=>{
           {fileopener &&
                 <button  onClick={()=>setfileopener(!fileopener)}  className={`text-4xl cursor-pointer text-right transition-all duration-500   ${fileopener ? 'w-10 opacity-100 ' : 'w-0 opacity-0 '}`}>x</button>
               }
-            <div  className={` relative flex  text-[40px] mr-5 gap-4 transition-all duration-800 ${fileopener ? 'h-10 w-[20%]' : 'h-0'} `} >
-              <RiFolderSettingsFill onClick={()=>setfileopener(!fileopener)} className={` cursor-pointer mt-[-25px] transition-all duration-500 ${fileopener ? 'h-0 opacity-0 ' : 'h-10 opacity-100 text-3xl '}  `} />
-
+            <div  className={` relative flex   text-[40px] mr-5  gap-4 transition-all duration-800 ${fileopener ? 'h-10 w-[20%] ' : 'h-0'} `} >
+              <div className='flex items-center  gap-4'> 
+                <RiFolderSettingsFill onClick={()=>setfileopener(!fileopener)} className={` cursor-pointer mt-[-25px] text-6xl transition-all duration-500 ${fileopener ? 'h-0 opacity-0 ' : 'h-10 opacity-100 text-3xl '}  `} />
+                {!fileopener &&
+                      <div className='hover:bg-gray-800 mb-12 hover:rounded-xl mt-6'>
+                      <AudioRecorder 
+                          onRecordingComplete={addAudioElement}
+                          audioTrackConstraints={{
+                            noiseSuppression: true,
+                            echoCancellation: true,
+                          }} 
+                        />
+                      </div>
+                      }
+              </div>
                     <div className='hover:bg-gray-800  hover:rounded-xl'>
                       <input onChange={(e)=>handleImage(e)} type="file" id='image' hidden />
                       <label for='image'><mark><FcImageFile className={`'cursor-pointer transition-all duration-6000 w-0 ${fileopener &&'rounded-lg w-10'} '`}/></mark></label>
@@ -351,10 +397,6 @@ let handleactivemassage =(item)=>{
                     <div className='hover:bg-gray-800  hover:rounded-xl'>
                       <input onChange={(e)=>handleVideo(e)} type="file" id='video' hidden />
                       <label for='video'><mark><RiFileVideoFill  className={`'bg-gray-800 text-[#e3bf7f] cursor-pointer transition-all duration-1500 w-0 ${fileopener &&'rounded-lg w-10'} '`}/></mark></label>
-                    </div>
-                    <div className='hover:bg-gray-800  hover:rounded-xl'>
-                      <input onChange={(e)=>handleVideo(e)} type="file" id='video' hidden />
-                      <label for='video'><mark><IoMdMic  className={`' text-white cursor-pointer transition-all duration-1500 w-0 ${fileopener &&'rounded-lg w-10'} '`}/></mark></label>
                     </div>
             </div>
 

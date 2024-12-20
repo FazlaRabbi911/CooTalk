@@ -39,10 +39,13 @@ const Notification = () => {
     set(ref(db, `Notes/${itemKey}`), {
       Adminuid: user.uid,
       NoteKey: itemKey,
-      nodeheading: nodeheading || "Add", // Use default if empty
+      nodeheading: nodeheading || "Untitled", // Use default if empty
       nodeContent: nodeContent || "Default Content", // Use default if empty
       Time: `${new Date().getFullYear()}/${new Date().getMonth() + 1}/${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
-    });
+    }).then(() => {
+      setnodeheading("");  // Reset the heading
+      setnodeContent("");  // Reset the content
+    }) 
   };
 
 
@@ -162,6 +165,8 @@ const handleDeleteNote = (itemKey) => {
                   style={{
                     transform: 'translateZ(50px) rotateY(180deg)', // Combine all transforms here
                     transformStyle: 'preserve-3d',
+                    transition: 'transform 0.6s ease-in-out', // Add smooth transition
+                    willChange: 'transform', // Hint to the browser to optimize for this property
                   }}
               >  
                 <button
@@ -170,6 +175,7 @@ const handleDeleteNote = (itemKey) => {
                 >
                   x
                 </button>
+                
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -187,9 +193,10 @@ const handleDeleteNote = (itemKey) => {
                 {zoomedCardId === item.itemkey && <button onClick={()=>{setZoomedCardId(null),toggleRotate(item.itemkey)}}  className="absolute top-0 left-24 px-4 py-2 border-2 border-white rounded-full bg-transparent text-white  hover:bg-red-500 hover:text-white transition">cancel</button>}
                 <div className="h-[60%] text-center text-white w-full" >
                 <textarea
-                onChange={handleHeadingChange} placeholder="add heading"
+                onChange={handleHeadingChange} 
+                placeholder="add heading"
                 value={zoomedCardId === item.itemkey ? item.notedata : item.nodeheading || ""}
-                className="h-10 font-bold text-xl bg-transparent outline-none border-none text-center"   maxLength={25}
+                className="h-10 font-bold text-xl bg-transparent outline-none border-none text-center "   maxLength={25}
                 />
                 <textarea
                   onChange={handleContentChange}
